@@ -1,0 +1,70 @@
+/* General page design */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f6fb;
+    color: #243247;
+    max-width: 750px;
+    margin: 50px auto;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+/* Main heading */
+h1 {
+    text-align: center;
+    color: #214c80;
+    margin-bottom: 15px;
+}
+/* Description */
+p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+/* Section headings */
+h2 {
+    color: #334155;
+    font-size: 19px;
+    margin-top: 30px;
+}
+/* Dropdown menus */
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: white;
+}
+/* Prediction button */
+button {
+    background-color: #2563eb;
+    color: white;
+    padding: 13px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #1d4ed8;
+}
+/* Prediction result */
+#result {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 35px;
+    white-space: pre-line;
+}
+/* Mobile devices */
+@media (max-width: 600px) {
+    body {
+        margin: 12px;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}

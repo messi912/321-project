@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>Polynesian Word Reconstruction</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Polynesian Language Reconstruction</h1>
+    <p>Predict missing words using related languages.</p>
+    <h2>Step 1: Select Target Language</h2>
+    <select id="language">
+        <option value="Samoan">Samoan</option>
+        <option value="Tongan">Tongan</option>
+        <option value="Maori">Maori</option>
+    </select>
+    <h2>Step 2: Select Concept</h2>
+    <select id="concept">
+        <option value="water">Water</option>
+        <option value="fire">Fire</option>
+        <option value="hand">Hand</option>
+    </select>
+    <h2>Step 3: Generate Prediction</h2>
+    <button onclick="predictWord()">Predict Word</button>
+    <h2>Prediction Results</h2>
+    <p id="result">No prediction yet.</p>
+    <script>
+        async function predictWord() {
+            let language = document.getElementById("language").value;
+            let concept = document.getElementById("concept").value;
+            let result = document.getElementById("result");
+            result.textContent = "Loading...";
+            try {
+                let response = await fetch("/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        language: language,
+                        concept: concept
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error("Request failed");
+                }
+                let data = await response.json();
+                result.textContent =
+                    "Target Language: " + data.language + "\n" +
+                    "Concept: " + data.concept + "\n\n" +
+                    "Related Words: " + data.related_words + "\n" +
+                    "Predicted Word: " + data.predicted_word + "\n" +
+                    "Actual Word: " + data.actual_word + "\n" +
+                    "Exact Match: " + data.exact_match + "\n" +
+                    "Normalized Edit Distance: " +
+                    data.normalized_edit_distance;
+            } catch (error) {
+                result.textContent = "Error connecting to backend.";
+            }
+        }
+    </script>   
+</body>
+</html>
