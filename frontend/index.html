@@ -2,38 +2,282 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
-    <title>Polynesian Word Reconstruction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Polynesian Language Reconstruction</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>Polynesian Language Reconstruction</h1>
-    <p>Predict missing words using related languages.</p>
-    <h2>Step 1: Select Target Language</h2>
-    <select id="language">
-        <option value="Samoan">Samoan</option>
-        <option value="Tongan">Tongan</option>
-        <option value="Maori">Maori</option>
-    </select>
-    <h2>Step 2: Select Concept</h2>
-    <select id="concept">
-        <option value="water">Water</option>
-        <option value="fire">Fire</option>
-        <option value="hand">Hand</option>
-    </select>
-    <h2>Step 3: Generate Prediction</h2>
-    <button onclick="predictWord()">Predict Word</button>
-    <h2>Prediction Results</h2>
-    <p id="result">No prediction yet.</p>
+    <main class="container">
+
+        <h1>Polynesian Language Reconstruction</h1>
+
+        <p class="description">
+            Predict missing words using related Polynesian languages.
+        </p>
+
+        <!-- Step 1: Language -->
+        <section>
+            <h2>Step 1: Select Target Language</h2>
+
+            <select id="language">
+                <option value="Samoan">Samoan</option>
+                <option value="Tongan">Tongan</option>
+                <option value="Maori">Maori</option>
+                <option value="Hawaiian">Hawaiian</option>
+                <option value="Rarotongan">Rarotongan</option>
+            </select>
+        </section>
+
+        <!-- Step 2: Search Concept -->
+        <section>
+            <h2>Step 2: Select Concept</h2>
+
+            <input
+                type="search"
+                id="conceptSearch"
+                list="conceptList"
+                placeholder="Type to search concepts..."
+                autocomplete="off"
+                aria-label="Search for a concept"
+            >
+
+            <datalist id="conceptList">
+                <!-- Example concepts.
+                     Replace with the full dataset list. -->
+                <option value="water"></option>
+                <option value="fire"></option>
+                <option value="hand"></option>
+                <option value="mother"></option>
+                <option value="father"></option>
+                <option value="fish"></option>
+                <option value="tree"></option>
+                <option value="stone"></option>
+                <option value="house"></option>
+                <option value="sun"></option>
+                <option value="moon"></option>
+                <option value="bird"></option>
+                <option value="sea"></option>
+                <option value="earth"></option>
+                <option value="eye"></option>
+                <option value="foot"></option>
+            </datalist>
+
+            <p id="conceptError" class="hint"></p>
+        </section>
+
+        <!-- Step 3: Predict -->
+        <section>
+            <h2>Step 3: Generate Prediction</h2>
+
+            <button id="predictButton" type="button">
+                Predict Word
+            </button>
+
+            <p id="status" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- Prediction Results -->
+        <section>
+            <h2>Prediction Results</h2>
+
+            <div id="emptyResult" class="empty-result">
+                No prediction yet. Select a language and concept.
+            </div>
+
+            <div id="results" class="results" hidden>
+
+                <div class="result-item">
+                    <span>Target Language</span>
+                    <strong id="resultLanguage"></strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Concept</span>
+                    <strong id="resultConcept"></strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Related Words</span>
+                    <strong id="relatedWords"></strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Predicted Word</span>
+                    <strong id="predictedWord"></strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Actual Word</span>
+                    <strong id="actualWord"></strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Exact Match</span>
+                    <strong id="exactMatch"></strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Normalized Edit Distance</span>
+                    <strong id="editDistance"></strong>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
     <script>
+        // Get HTML elements
+        const languageSelect =
+            document.getElementById("language");
+
+        const conceptSearch =
+            document.getElementById("conceptSearch");
+
+        const conceptError =
+            document.getElementById("conceptError");
+
+        const predictButton =
+            document.getElementById("predictButton");
+
+        const status =
+            document.getElementById("status");
+
+        const results =
+            document.getElementById("results");
+
+        const emptyResult =
+            document.getElementById("emptyResult");
+
+        let isLoading = false;
+
+        // Get available concepts from datalist
+        const availableConcepts = Array.from(
+            document.querySelectorAll("#conceptList option")
+        ).map(option => option.value);
+
+        // Check if the entered concept is valid
+        function getSelectedConcept() {
+            const typed = conceptSearch.value
+                .trim()
+                .toLowerCase();
+
+            return availableConcepts.find(
+                concept => concept.toLowerCase() === typed
+            ) || null;
+        }
+
+        // Reset results when selection changes
+        function resetResults() {
+            results.hidden = true;
+            emptyResult.hidden = false;
+            status.textContent = "";
+        }
+
+        // Validate concept
+        function validateConcept() {
+            const concept = getSelectedConcept();
+
+            if (!concept) {
+                conceptError.textContent =
+                    conceptSearch.value.trim()
+                    ? "Please select a concept from the suggestions."
+                    : "";
+
+                predictButton.disabled = true;
+                return false;
+            }
+
+            conceptError.textContent = "";
+            predictButton.disabled = isLoading;
+            return true;
+        }
+
+        conceptSearch.addEventListener("input", () => {
+            resetResults();
+            if (!isLoading) {
+                validateConcept();
+            }
+        });
+
+        languageSelect.addEventListener("change", resetResults);
+
+        // Format returned data
+        function displayValue(value, fallback = "Not available") {
+            if (value === null ||
+                value === undefined ||
+                value === "") {
+                return fallback;
+            }
+
+            if (Array.isArray(value)) {
+                return value.map(item =>
+                    displayValue(item)
+                ).join(", ");
+            }
+
+            if (typeof value === "object") {
+                return Object.entries(value)
+                    .map(([key, val]) => key + ": " + val)
+                    .join(", ");
+            }
+
+            if (typeof value === "boolean") {
+                return value ? "Yes" : "No";
+            }
+
+            return String(value);
+        }
+
+        // Display prediction results
+        function showResults(data) {
+            document.getElementById("resultLanguage").textContent =
+                displayValue(data.language);
+
+            document.getElementById("resultConcept").textContent =
+                displayValue(data.concept);
+
+            document.getElementById("relatedWords").textContent =
+                displayValue(data.related_words);
+
+            document.getElementById("predictedWord").textContent =
+                displayValue(data.predicted_word);
+
+            document.getElementById("actualWord").textContent =
+                displayValue(data.actual_word);
+
+            document.getElementById("exactMatch").textContent =
+                displayValue(data.exact_match, "Not calculated");
+
+            document.getElementById("editDistance").textContent =
+                displayValue(
+                    data.normalized_edit_distance,
+                    "Not calculated"
+                );
+
+            emptyResult.hidden = true;
+            results.hidden = false;
+        }
+
+        // Send request to FastAPI
         async function predictWord() {
-            let language = document.getElementById("language").value;
-            let concept = document.getElementById("concept").value;
-            let result = document.getElementById("result");
-            result.textContent = "Loading...";
+            if (isLoading || !validateConcept()) {
+                return;
+            }
+
+            const language = languageSelect.value;
+            const concept = getSelectedConcept();
+
+            isLoading = true;
+            predictButton.disabled = true;
+            predictButton.textContent = "Predicting...";
+
+            resetResults();
+            status.textContent = "Generating prediction...";
+
             try {
-                let response = await fetch("/predict", {
+                const response = await fetch("/predict", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -43,23 +287,33 @@
                         concept: concept
                     })
                 });
+
                 if (!response.ok) {
-                    throw new Error("Request failed");
+                    throw new Error("Server error: " + response.status);
                 }
-                let data = await response.json();
-                result.textContent =
-                    "Target Language: " + data.language + "\n" +
-                    "Concept: " + data.concept + "\n\n" +
-                    "Related Words: " + data.related_words + "\n" +
-                    "Predicted Word: " + data.predicted_word + "\n" +
-                    "Actual Word: " + data.actual_word + "\n" +
-                    "Exact Match: " + data.exact_match + "\n" +
-                    "Normalized Edit Distance: " +
-                    data.normalized_edit_distance;
+
+                const data = await response.json();
+
+                showResults(data);
+                status.textContent = "Request completed.";
+
             } catch (error) {
-                result.textContent = "Error connecting to backend.";
+                console.error(error);
+                status.textContent =
+                    "Error connecting to backend. Please try again.";
+
+            } finally {
+                isLoading = false;
+                predictButton.textContent = "Predict Word";
+                validateConcept();
             }
         }
-    </script>   
+
+        predictButton.addEventListener("click", predictWord);
+
+        // Initial validation
+        validateConcept();
+    </script>
+
 </body>
 </html>

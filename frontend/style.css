@@ -1,32 +1,54 @@
-/* General page design */
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f3f6fb;
     color: #243247;
-    max-width: 750px;
-    margin: 50px auto;
+    margin: 0;
+    padding: 24px;
+}
+
+/* Main container */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: white;
     padding: 35px;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
-/* Main heading */
+
+/* Page title */
 h1 {
     text-align: center;
     color: #214c80;
+    font-size: 30px;
     margin-bottom: 15px;
 }
+
 /* Description */
-p {
+.description {
+    text-align: center;
+    color: #64748b;
     font-size: 16px;
+    margin-bottom: 30px;
     line-height: 1.6;
 }
-/* Section headings */
-h2 {
-    color: #334155;
-    font-size: 19px;
-    margin-top: 30px;
+
+/* Sections */
+section {
+    margin-top: 28px;
 }
-/* Dropdown menus */
+
+h2 {
+    font-size: 19px;
+    color: #334155;
+    margin-bottom: 14px;
+}
+
+/* Language dropdown */
 select {
     width: 100%;
     padding: 12px;
@@ -34,7 +56,40 @@ select {
     border-radius: 8px;
     font-size: 16px;
     background-color: white;
+    color: #243247;
+    cursor: pointer;
 }
+
+/* Searchable concept input */
+#conceptSearch {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: white;
+    color: #243247;
+}
+
+/* Input focus */
+select:focus,
+#conceptSearch:focus {
+    outline: 2px solid #93c5fd;
+    border-color: #2563eb;
+}
+
+/* Helper and error messages */
+.hint,
+#conceptError {
+    color: #64748b;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+#conceptError:not(:empty) {
+    color: #dc2626;
+}
+
 /* Prediction button */
 button {
     background-color: #2563eb;
@@ -44,27 +99,113 @@ button {
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
+
 button:hover {
     background-color: #1d4ed8;
 }
-/* Prediction result */
-#result {
+
+button:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Prediction status */
+#status {
+    font-size: 14px;
+    color: #475569;
+    margin-top: 12px;
+}
+
+/* Empty result */
+.empty-result {
     background-color: #eff6ff;
     border: 1px solid #bfdbfe;
     border-radius: 8px;
     padding: 20px;
-    min-height: 35px;
-    white-space: pre-line;
+    color: #64748b;
+    line-height: 1.6;
 }
-/* Mobile devices */
+
+/* Prediction result container */
+.results {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Hide elements when needed */
+[hidden] {
+    display: none !important;
+}
+
+/* Individual prediction result */
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+/* Result labels */
+.result-item span {
+    color: #64748b;
+    font-size: 15px;
+}
+
+/* Result values */
+.result-item strong {
+    color: #1e40af;
+    font-size: 15px;
+    text-align: right;
+    max-width: 60%;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* Responsive layout for phones */
 @media (max-width: 600px) {
     body {
-        margin: 12px;
+        padding: 12px;
+    }
+
+    .container {
+        margin: 0 auto;
         padding: 20px;
+        border-radius: 10px;
     }
 
     h1 {
         font-size: 24px;
+    }
+
+    h2 {
+        font-size: 17px;
+    }
+
+    .description {
+        font-size: 14px;
+    }
+
+    .result-item {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .result-item strong {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    button {
+        width: 100%;
     }
 }
