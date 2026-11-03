@@ -73,18 +73,20 @@ Example, "die" (`24773_4`): Samoan has `mate` and `ta-mate` → keep `mate`.
 - **Tahitian:** only 2 forms survive cleaning; effectively unusable.
 - **Multi-letter sounds:** Māori `wh` is one sound written as two letters, so the baseline treats it as two. Example error: target `hoʔokani`, predicted `whaʔakani`.
 - **Reduplication mismatches:** one language's form is doubled and another's isn't (`pulu` vs `pulupulu`); no model can predict these correctly.
-- **Split leakage:** 8 of 61 test sets share a root with a training set (e.g. "die" `make` and "kill" `hoʔomake`, both root 24773).
+
+## Applied changes
+### Split by root instead of by cognate set
+**Problem:** 8 of 61 test sets shared a root with a training set, so the model got a small preview of some test words (e.g. "die" `make` and "kill" `hoʔomake`, both root 24773).
+**Change:** `assign_split()` in `splits.py` hashes only the root part of the ID (`24773` from `24773_4`), so all sets from one root land in the same split.
+**Result:** Val and test sets sharing a root with training: 0. Splits are now 456 / 63 / 43 sets (1,469 / 212 / 141 examples).
+
+| Baseline | Val accuracy | Val NED | Test accuracy | Test NED |
+|---|---|---|---|---|
+| copy | 0.439 | 0.224 | 0.418 | 0.253 |
+| mapped | 0.750 | 0.109 | 0.638 | 0.158 |
 
 ## Proposed changes
-### 1. Split by root instead of by cognate set
-**Problem:** 8 of 61 test sets share a root with a training set, so the model gets a small preview of some test words (e.g. "die" `make` and "kill" `hoʔomake`).
-**Change:** Hash only the root part of the ID (`24773` from `24773_4`) so all sets
-from one root land in the same split.
-**Where:** `assign_split()` in `splits.py` (one line).
-**Measure:** Test sets sharing a root with training should drop from 8 to 0.
-Accuracy may drop slightly — that is expected, because the current number is slightly inflated by the leak. The new number is the honest one.
-
-### 2. Handle reduplication mismatches
+### 1. Handle reduplication mismatches
 **Problem:** Some languages list a doubled form (`pulupulu`) where sisters list the single form (`pulu`), so no model can predict them correctly.
 **Change:** When a form is an exact doubling (first half = second half) and at least one sister has the single half, keep the single half.
 **Where:** Add a step after Rule 5 in `build_cognate_table.py`.
