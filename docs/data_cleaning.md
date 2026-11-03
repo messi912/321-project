@@ -78,15 +78,21 @@ Example, "die" (`24773_4`): Samoan has `mate` and `ta-mate` → keep `mate`.
 ## Proposed changes
 ### 1. Split by root instead of by cognate set
 **Problem:** 8 of 61 test sets share a root with a training set, so the model gets a small preview of some test words (e.g. "die" `make` and "kill" `hoʔomake`).
+
 **Change:** Hash only the root part of the ID (`24773` from `24773_4`) so all sets
 from one root land in the same split.
+
 **Where:** `assign_split()` in `splits.py` (one line).
+
 **Measure:** Test sets sharing a root with training should drop from 8 to 0.
 Accuracy may drop slightly — that is expected, because the current number is slightly inflated by the leak. The new number is the honest one.
 
 ### 2. Handle reduplication mismatches
 **Problem:** Some languages list a doubled form (`pulupulu`) where sisters list the single form (`pulu`), so no model can predict them correctly.
+
 **Change:** When a form is an exact doubling (first half = second half) and at least one sister has the single half, keep the single half.
+
 **Where:** Add a step after Rule 5 in `build_cognate_table.py`.
+
 **Measure:** Count how many forms are changed, then rerun `baseline.py`.
 Accuracy should improve slightly, since these were guaranteed errors.
