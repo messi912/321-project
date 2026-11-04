@@ -77,7 +77,9 @@ Example, "die" (`24773_4`): Samoan has `mate` and `ta-mate` → keep `mate`.
 ## Applied changes
 ### Split by root instead of by cognate set
 **Problem:** 8 of 61 test sets shared a root with a training set, so the model got a small preview of some test words (e.g. "die" `make` and "kill" `hoʔomake`, both root 24773).
+
 **Change:** `assign_split()` in `splits.py` hashes only the root part of the ID (`24773` from `24773_4`), so all sets from one root land in the same split.
+
 **Result:** Val and test sets sharing a root with training: 0. Splits are now 456 / 63 / 43 sets (1,469 / 212 / 141 examples).
 
 | Baseline | Val accuracy | Val NED | Test accuracy | Test NED |
@@ -85,10 +87,20 @@ Example, "die" (`24773_4`): Samoan has `mate` and `ta-mate` → keep `mate`.
 | copy | 0.439 | 0.224 | 0.418 | 0.253 |
 | mapped | 0.750 | 0.109 | 0.638 | 0.158 |
 
-## Proposed changes
-### 1. Handle reduplication mismatches
-**Problem:** Some languages list a doubled form (`pulupulu`) where sisters list the single form (`pulu`), so no model can predict them correctly.
-**Change:** When a form is an exact doubling (first half = second half) and at least one sister has the single half, keep the single half.
-**Where:** Add a step after Rule 5 in `build_cognate_table.py`.
-**Measure:** Count how many forms are changed, then rerun `baseline.py`.
-Accuracy should improve slightly, since these were guaranteed errors.
+### Collapse reduplicated forms
+**Problem:** Some languages list a doubled form (`piapia`) where a sister in the same cognate set lists the single form (`pia`), so no model can predict them correctly.
+
+**Change:** After picking one form per language, if a form is an exact doubling (first half = second half, at least 4 letters) and a sister in the same set has the single half, keep the single half.
+
+**Where:** `single_half()` and the collapse step after Rule 5 in `build_cognate_table.py`.
+
+**Result:** 16 forms collapsed (e.g. Hawaiian `piapia` → `pia`, Samoan `itiiti` → `iti`).
+
+| Mapped baseline | Val accuracy | Val NED |
+|---|---|---|
+| Before | 0.750 | 0.109 |
+| After | 0.764 | 0.100 |
+
+The seq2seq model's change was within run-to-run variation (±4 points across seeds), so no effect can be claimed from single runs.
+
+**Limitation:** Only exact matches are collapsed. Near-matches such as Tongan `kiokio` vs. Samoan `ʔio` stay doubled, because the halves differ by a sound correspondence.
