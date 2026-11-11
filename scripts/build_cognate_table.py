@@ -46,6 +46,14 @@ def parse_etymon(name):
     return pd.Series([proto_language, proto_form, gloss])
 
 
+def single_half(form):
+    """Return the half of an exactly doubled form ("piapia" -> "pia"), or None."""
+    half = len(form) // 2
+    if len(form) >= 4 and len(form) % 2 == 0 and form[:half] == form[half:]:
+        return form[:half]
+    return None
+
+
 # Load the CLDF tables
 forms = pd.read_csv(DATA_DIR / "forms.csv", low_memory=False)
 cognates = pd.read_csv(DATA_DIR / "cognates.csv", low_memory=False)
@@ -80,6 +88,23 @@ forms = forms.sort_values(["Cognateset_ID", "Language_ID", "Boundaries", "Length
 best = forms.drop_duplicates(["Cognateset_ID", "Language_ID"], keep="first").copy()
 best["Clean"] = best["Clean"].str.replace("-", "", regex=False)
 print("Forms after picking one per language per set:", len(best))
+
+# Some sources list a doubled form (Hawaiian "piapia") where a sister in the same cognate
+# set lists the single form ("pia"). No model can predict that difference, so in that
+# case keep the single half. A doubled form with no single-form sister is left alone.
+forms_in_set = best.groupby("Cognateset_ID")["Clean"].agg(set)
+
+
+def collapse(row):
+    half = single_half(row["Clean"])
+    if half is not None and half in forms_in_set[row["Cognateset_ID"]]:
+        return half
+    return row["Clean"]
+
+
+collapsed = best.apply(collapse, axis=1)
+print("Reduplicated forms collapsed:", (collapsed != best["Clean"]).sum())
+best["Clean"] = collapsed
 
 # One row per cognate set, one column per language
 table = best.pivot(index="Cognateset_ID", columns="Language_ID", values="Clean")
