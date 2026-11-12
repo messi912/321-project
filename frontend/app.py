@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from data import LANGUAGES, TABLE_PATH, load_examples
 from train import load_checkpoint, predict as model_predict
 from metrics import score
+from explain import explain_prediction
 
 app = FastAPI()
 
@@ -117,6 +118,12 @@ def predict_word(data: WordRequest):
         "cognateset_id": str(example["cognateset_id"]),
         "split": example["split"],
         "related_words": example["sources"],
+        "explanation": explain_prediction(
+            prediction,
+            example["sources"],
+            target_language=example["target_language"],
+            cognateset_id=example["cognateset_id"]
+        ),
         "predicted_word": prediction,
         "actual_word": actual,
         "exact_match": metrics["exact"],

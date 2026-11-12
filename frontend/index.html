@@ -104,6 +104,15 @@
                     <span>Normalized Edit Distance</span>
                     <strong id="editDistance"></strong>
                 </div>
+                <div class="result-item">
+                    <span>Why This Prediction?</span>
+                    <strong id="predictionExplanation"></strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Explanation Note</span>
+                    <small id="explanationDisclaimer"></small>
+                </div>
 
             </div>
         </section>
@@ -312,6 +321,12 @@
                     data.normalized_edit_distance,
                     "Not calculated"
                 );
+
+            document.getElementById("predictionExplanation").textContent =
+                data.explanation?.summary || "Explanation unavailable.";
+
+            document.getElementById("explanationDisclaimer").textContent =
+                data.explanation?.disclaimer || "";
 
             emptyResult.hidden = true;
             results.hidden = false;
