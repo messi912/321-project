@@ -1,0 +1,332 @@
+cognateset_id,hawaiian,maori,rarotongan,samoan,tahitian,tongan,n_languages,gloss,Concepticon_ID,Concepticon_Gloss,source,proto_language,proto_form,split_group,split
+above-9,,,runga,,niʔa,,2,above,1741,ABOVE,ABVD,,,above-9,test
+all-13,,katoa,katoa,ʔātoa,atoʔa,kotoa,5,all,98,ALL,ABVD,,,all-13,train
+and-2,,me,maa,ma,,,3,and,1577,AND,ABVD,,,and-2,train
+ash-67,lehu,pungarehu,rèu,lefulefu,rehu,,5,ashes,646,ASH,ABVD,,,ash-67,train
+at-1,i,i,i,i,i,,5,at,1461,AT,ABVD,,,at-1,train
+at-5,,kei,tei,,,,2,at,1461,AT,ABVD,,,at-5,train
+back-11,kua,tuaraa,mokotua,tua,tua,tuʔa,6,back,1291,BACK,ABVD,,,back-11,train
+badevil-9,ʔino,kino,kino,ʔinoʔino,ʔino,,5,"bad, evil",3764,BAD OR EVIL,ABVD,,,badevil-9,val
+belly-2,ʔōpū,,koopuu,,ʔoopuu,,3,belly,1251,BELLY,ABVD,,,belly-2,train
+belly-9,,,manava,manava,,,2,belly,1251,BELLY,ABVD,,,belly-9,test
+below-8,lalo,,raro,,raro,,3,below,1485,BELOW OR UNDER,ABVD,,,below-8,test
+big-11,nui,nui,,nui,nūnui,,4,big,1202,BIG,ABVD,,,big-11,test
+big-12,,,,lasi,rahi,lahi,3,big,1202,BIG,ABVD,,,big-12,train
+bird-1,manu,manu,,manulele,manu,manu,5,bird,937,BIRD,ABVD,,,bird-1,train
+black-5,ʔeleʔele,,kere,,ʔereʔere,,3,black,163,BLACK,ABVD,,,black-5,train
+black-7,,,uri,uliuli,,ʔuliʔuli,3,black,163,BLACK,ABVD,,,black-7,train
+blood-4,koko,toto,toto,toto,toto,toto,6,blood,946,BLOOD,ABVD,,,blood-4,val
+bone-5,iwi,iwi,ivi,ivi,ivi,,5,bone,1394,BONE,ABVD,,,bone-5,train
+bone-52,iwi,iwi,ivi,ivi,ivi,hui,6,bone,1394,BONE,ABVD,,,bone-5,train
+branch-1,lālā,,raaraa,lālā,,,3,branch,1531,BRANCH,ABVD,,,branch-1,train
+branch-2,,manga,,,ʔaamaʔa,,2,branch,1531,BRANCH,ABVD,,,branch-2,train
+breast-1,ū,uu,uu,susu,ū,huhu,6,breast,1402,BREAST,ABVD,,,breast-1,train
+child-6,,tamaiti,,tamaitiiti,tamariʔi,tamasiʔi,4,child,2099,CHILD,ABVD,,,child-6,test
+child-63,,,tamariki,,tamariʔi,,2,child,2099,CHILD,ABVD,,,child-6,test
+child-64,,tamaiti,tamaiti,tamaitiiti,,,3,child,2099,CHILD,ABVD,,,child-6,test
+cloud-12,ao,,tiao,ao,,ʔao,4,cloud,1489,CLOUD,ABVD,,,cloud-12,val
+cold-1,,makariri,,maʔalili,maʔariri,,3,cold,1287,COLD,ABVD,,,cold-1,train
+cold-8,anu,,anu,,anu,,3,cold,1287,COLD,ABVD,,,cold-8,test
+correcttrue-8,,,,,tano,tonu,2,"correct, true",1725,CORRECT (RIGHT),ABVD,,,correcttrue-8,val
+correcttrue-9,,tika,tika,,,,2,"correct, true",1725,CORRECT (RIGHT),ABVD,,,correcttrue-9,test
+day-1,,ao,ao,,ao,ʔaho,4,day,1225,DAY (NOT NIGHT),ABVD,,,day-1,train
+day-7,lā,raa,,lā,,,3,day,1225,DAY (NOT NIGHT),ABVD,,,day-7,train
+dirty-9,lepo,,repo,,repo,,3,dirty,1230,DIRTY,ABVD,,,dirty-9,train
+dog-7,ʔīlio,kurii,kurii,ʔulī,ʔurii,kulī,6,dog,2009,DOG,ABVD,,,dog-7,train
+dry-13,maloʔo,maroke,maroo,,maroo,,4,dry,1398,DRY,ABVD,,,dry-13,test
+dullblunt-11,,,mania,,mania,,2,"dull, blunt",379,BLUNT,ABVD,,,dullblunt-11,train
+dust-1,ʔehu,,puèu,p|efu,,efu,4,dust,2,DUST,ABVD,,,dust-1,train
+dust-74,,,puèu,p|efu,,,2,dust,2,DUST,ABVD,,,dust-1,train
+ear-1,,taringa,taringa,taliŋa,tariʔa,teliŋa,5,ear,1247,EAR,ABVD,,,ear-1,train
+earthsoil-10,,,keremaroo,,,kelekele,2,earth/soil,1228,EARTH (SOIL),ABVD,,,earthsoil-10,val
+earthsoil-11,lepo,repo,repo,,repo,,4,earth/soil,1228,EARTH (SOIL),ABVD,,,dirty-9,train
+egg-5,hua,,ua,fuāmoa,,,3,egg,744,EGG,ABVD,,,egg-5,train
+eight-3,walu,waru,varu,valu,,valu,5,Eight,1705,EIGHT,ABVD,,,eight-3,train
+eye-1,maka,mata,mata,mata,mata,mata,6,eye,1248,EYE,ABVD,,,eye-1,train
+far-13,mamao,,mamao,mamao,,mamaʔo,4,far,1406,FAR,ABVD,,,far-13,val
+fatgrease-1,momona,,,momona,,,2,fat/grease,323,FAT (ORGANIC SUBSTANCE),ABVD,,,fatgrease-1,train
+fatgrease-12,,,ìnu,suni,,,2,fat/grease,323,FAT (ORGANIC SUBSTANCE),ABVD,,,fatgrease-12,train
+fatgrease-14,,ngako,ngako,ŋaʔo,ʔaʔo,ŋako,5,fat/grease,323,FAT (ORGANIC SUBSTANCE),ABVD,,,fatgrease-14,train
+father-1,,,,tamā,,tama|i,2,father,1217,FATHER,ABVD,,,father-1,train
+father-9,,matua,metua,,metua,,3,father,1217,FATHER,ABVD,,,father-9,train
+feather-1,hulu,huru-manu,,fulu,huruhuru,fulufulu,5,feather,1201,FEATHER,ABVD,,,feather-1,val
+fifty-2,,,,limagafulu,,nimangofulu,2,Fifty,1717,FIFTY,ABVD,,,fifty-2,train
+fire-1,ahi,ahi,aì,afi,auahi,afi,6,fire,221,FIRE,ABVD,,,fire-1,train
+fish-1,iʔa,ika,ika,iʔa,iʔa,ika,6,fish,227,FISH,ABVD,,,fish-1,test
+five-1,lima,rima,rima,lima,rima,nima,6,Five,493,FIVE,ABVD,,,five-1,val
+flower-1,pua,puaawai,pua,,pua,,4,flower,239,FLOWER,ABVD,,,flower-1,train
+fog-1,ʔohu,kohu,koʔu,ʔaʔapu,,kakapu,5,fog,249,FOG,ABVD,,,fog-1,train
+fog-10,,,maaʔuu,,māhu,,2,fog,249,FOG,ABVD,,,fog-10,train
+fog-47,ʔohu,kohu,koʔu,,,,3,fog,249,FOG,ABVD,,,fog-1,train
+four-1,hā,whaa,àa,,maha,fā,5,Four,1500,FOUR,ABVD,,,four-1,train
+fruit-1,hua,hua,ʔua,fua,hua,fua,6,fruit,1507,FRUIT,ABVD,,,egg-5,train
+good-15,maikaʔi,,meitaki,,maitaʔi,,3,good,1035,GOOD,ABVD,,,good-15,train
+good-17,,,,lelei,,lelei,2,good,1035,GOOD,ABVD,,,good-17,train
+grass-13,,,matie,mutia,matie,,3,grass,606,GRASS,ABVD,,,grass-13,train
+grass-58,mauʔu,,mauku,,,mohuku,3,grass,606,GRASS,ABVD,,,grass-58,train
+green-1,,,,lanumeamata,matie,lanu-mata,3,green,1425,GREEN,ABVD,,,grass-13,train
+green-12,,,,lanumeamata,,lanu-mata,2,green,1425,GREEN,ABVD,,,grass-13,train
+hair-40,lauoho,,rauru,,rouru,louʔulu,4,hair,1040,HAIR,ABVD,,,hair-40,train
+hand-1,lima,ringa,rima,lima,rima,nima,6,hand,1277,HAND,ABVD,,,five-1,val
+head-1,,,,ulu,,ʔulu,2,head,1256,HEAD,ABVD,,,head-1,train
+head-10,poʔo,upoko,upoko,,upoʔo,,4,head,1256,HEAD,ABVD,,,head-10,train
+heavy-46,kaumaha,taimaha,,mamafa,,mamafa,4,heavy,1210,HEAVY,ABVD,,,heavy-46,train
+heavy-66,kaumaha,taimaha,,,,,2,heavy,1210,HEAVY,ABVD,,,heavy-46,train
+heshe-1,ia,ia,ia,ia,,ia,5,he/she,2642,HE OR SHE,ABVD,,,heshe-1,train
+heshe-42,ia,,,,ʔoia,,2,he/she,2642,HE OR SHE,ABVD,,,heshe-1,train
+house-14,hale,whare,àre,fale,fare,fale,6,house,1252,HOUSE,ABVD,,,house-14,val
+how-11,pehea,peehea,pèea,faʔapēfea,naafea,fēfē,6,how?,1239,HOW,ABVD,,,how-11,train
+husband-14,kāne,taane,taane,tāne,taane,,5,husband,1200,HUSBAND,ABVD,,,husband-14,train
+i-1,au,au,au,aʔu,,,4,I,1209,I,ABVD,,,i-1,train
+if-1,,,,ʔafai,ʔāhani,ka,3,if,1459,IF,ABVD,,,if-1,train
+if-5,,me,me,,,,2,if,1459,IF,ABVD,,,and-2,train
+ininside-5,lo|ko,,roto,loto,roto,,4,"in, inside",1460,IN,ABVD,,,ininside-5,val
+intestines-12,naʔau,wheekau,ngaakau,ŋāʔau,ʔaaʔau,ŋākau,6,intestines,1991,INTESTINES,ABVD,,,intestines-12,train
+lake-1,,,,lano,,ano,2,lake,624,LAKE,ABVD,,,lake-1,train
+lake-6,loko,roto,roto,loto,roto,,5,lake,624,LAKE,ABVD,,,ininside-5,val
+leaf-1,lau,rau,rau,lau,,,4,leaf,628,LEAF,ABVD,,,leaf-1,train
+left-1,,mauii,,,ʔaui,,2,left,244,LEFT,ABVD,,,left-1,train
+left-11,hema,,,,,hema,2,left,244,LEFT,ABVD,,,left-11,test
+left-59,,mauii,mauī,,,,2,left,244,LEFT,ABVD,,,left-1,train
+legfoot-1,wāwae,waewae,vae,vae,ʔaavae,vaʔe,6,leg/foot,2098,FOOT OR LEG,ABVD,,,legfoot-1,train
+lightning-2,uila,uira,uira,uila,uira,ʔuhila,6,lightning,1654,LIGHTNING,ABVD,,,lightning-2,train
+liver-1,ake,ate,ate,ate,atepaʔu,ʔate,6,liver,1224,LIVER,ABVD,,,liver-1,train
+long-105,loa,roa,roa,loloa,roa,lōloa,6,long,1203,LONG,ABVD,,,long-105,train
+louse-1,ʔuku,kutu,kutu,ʔutu,ʔutu,kutu,6,louse,1392,LOUSE,ABVD,,,louse-1,train
+manmale-1,kāne,taane,taane,tāne,taane,,5,man/male,2106,MALE PERSON,ABVD,,,husband-14,train
+meatflesh-10,ʔiʔo,kiko,kiko,ʔiʔo,ʔiʔo,,5,meat/flesh,2615,FLESH OR MEAT,ABVD,,,meatflesh-10,train
+meatflesh-14,,,,ʔaʔano,,kano,2,meat/flesh,2615,FLESH OR MEAT,ABVD,,,meatflesh-14,train
+moon-37,mahina,,,māsina,māhina,māhina,4,moon,1313,MOON,ABVD,,,moon-37,train
+moon-7,,marama,marama,mālama,,,3,moon,1313,MOON,ABVD,,,moon-7,train
+mosquito-1,,,namu,namu,naonao,namu,4,mosquito,1509,MOSQUITO,ABVD,,,mosquito-1,train
+mother-4,makuahine,,,,metua,,2,mother,1216,MOTHER,ABVD,,,father-9,train
+mother-6,,whaea,,,,faʔē,2,mother,1216,MOTHER,ABVD,,,mother-6,train
+mouth-1,waha,waha,vaà,,vaha,,4,mouth,674,MOUTH,ABVD,,,mouth-1,train
+mouth-2,,,,ŋutu,,ŋutu,2,mouth,674,MOUTH,ABVD,,,mouth-2,train
+name-6,inoa,ingoa,ingoa,iŋoa,iʔoa,hiŋoa,6,name,1405,NAME,ABVD,,,name-6,train
+narrow-12,,,oaoa,,oaoa,,2,narrow,1267,NARROW,ABVD,,,narrow-12,train
+narrow-89,lāʔiki,,ʔōiti,,,,2,narrow,1267,NARROW,ABVD,,,narrow-89,train
+near-9,,tata,vaitata,lata,faatata,,4,near,1942,NEAR,ABVD,,,near-9,train
+neck-18,,ua,,ua,,,2,neck,1333,NECK,ABVD,,,egg-5,train
+neck-20,ʔāʔī,,kakii,,ʔaʔii,kia,4,neck,1333,NECK,ABVD,,,neck-20,train
+needle-1,,,au,au,au,,3,needle,1382,NEEDLE (FOR SEWING),ABVD,,,i-1,train
+needle-66,kui,,,,,hui-tuitui,2,needle,1382,NEEDLE (FOR SEWING),ABVD,,,needle-66,train
+new-1,hou,hoou,ʔoou,fou,,foʔou,5,new,1231,NEW,ABVD,,,new-1,train
+night-1,pō,poo,poo,pō,poo,pō,6,night,1233,NIGHT,ABVD,,,night-1,train
+nine-44,iwa,iwa,iva,iva,iva,,5,Nine,1483,NINE,ABVD,,,nine-44,train
+nine-5,iwa,iwa,iva,iva,iva,hiva,6,Nine,1483,NINE,ABVD,,,nine-44,train
+nonot-11,ʔole,kaahore,kaaʔore,,,,3,"no, not",2279,NO OR NOT,ABVD,,,nonot-11,val
+nose-1,ihu,ihu,putaangiqu,isu,ihu,ihu,6,nose,1221,NOSE,ABVD,,,nose-1,train
+old-1,,,,matua,,motuʔa,2,old,1229,OLD,ABVD,,,old-1,train
+old-10,kahiko,,taìto,,,,2,old,1229,OLD,ABVD,,,old-10,train
+one-41,,tahi,taì,,tahi,taha,4,One,1493,ONE,ABVD,,,one-41,test
+onehundred-2,,rau,,lau,rau,teau,4,One Hundred,1634,HUNDRED,ABVD,,,leaf-1,train
+onethousand-2,,mano,mano,mano,mano,,4,One Thousand,1843,THOUSAND,ABVD,,,onethousand-2,train
+onethousand-3,,,,afe,,afe,2,One Thousand,1843,THOUSAND,ABVD,,,onethousand-3,train
+other-7,kekāhi,,,,vetahi,,2,other,197,OTHER,ABVD,,,other-7,train
+other-8,,,,ʔese,,kehe,2,other,197,OTHER,ABVD,,,other-8,train
+painfulsick-1,maʔi,maauiui,maauiui,maʔi,maʔi,mahaki,6,"painful, sick",2103,PAINFUL OR SICK,ABVD,,,painfulsick-1,train
+painfulsick-10,,,mamae,,mamae,,2,"painful, sick",2103,PAINFUL OR SICK,ABVD,,,painfulsick-10,train
+painfulsick-12,,maauiui,maauiui,,,,2,"painful, sick",2103,PAINFUL OR SICK,ABVD,,,painfulsick-1,train
+personhumanbeing-1,kanaka,tangata,tangata,taŋata,taʔata,taŋata,6,person/human being,683,PERSON,ABVD,,,personhumanbeing-1,train
+rain-1,ua,ua,ua,ua,ua,ʔuha,6,rain,658,RAIN (PRECIPITATION),ABVD,,,egg-5,train
+rat-12,ʔiole,kiore,kiore,ʔiole,ʔiore,,5,rat,1490,RAT,ABVD,,,rat-12,test
+red-13,ʔula,,kura,ʔula,ʔura,kulokula,5,red,156,RED,ABVD,,,red-13,train
+right-13,,matau,,tau-matau,,mataʔu,3,right,1019,RIGHT,ABVD,,,right-13,train
+right-40,ʔākau,katau,katau,,ʔatau,,4,right,1019,RIGHT,ABVD,,,right-13,train
+right-5,ʔākau,,katau,tau-matau,ʔatau,mataʔu,5,right,1019,RIGHT,ABVD,,,right-13,train
+roadpath-1,ala,ara,ara,ala,ara,hala,6,road/path,2457,PATH OR ROAD,ABVD,,,roadpath-1,train
+root-2,aʔa,paki|aka,paki-aka,aʔa,aʔa,aka,6,root,670,ROOT,ABVD,,,root-2,test
+rope-10,,,,maea,,maea,2,rope,1218,ROPE,ABVD,,,rope-10,train
+rope-9,kaula,taura,taura,,taura,,4,rope,1218,ROPE,ABVD,,,rope-9,train
+rotten-13,,,para,pala,,pala,3,rotten,1728,ROTTEN,ABVD,,,rotten-13,train
+rotten-15,pilau,pirau,,,,,2,rotten,1728,ROTTEN,ABVD,,,rotten-15,train
+salt-3,,,,māsima,,māsima,2,salt,1274,SALT,ABVD,,,salt-3,train
+salt-7,,,miti,miti,miti,,3,salt,1274,SALT,ABVD,,,salt-7,train
+sand-1,one,one,one,oneone,one,ʔoneʔone,6,sand,671,SAND,ABVD,,,sand-1,train
+sea-1,kai,tai,tai,tai,tai,tahi,6,sea,1474,SEA,ABVD,,,sea-1,train
+sea-10,moana,moana,moana,moana,moana,,5,sea,1474,SEA,ABVD,,,sea-10,train
+seven-1,hiku,whitu,,fitu,hitu,fitu,5,Seven,1704,SEVEN,ABVD,,,seven-1,test
+sharp-14,ʔoi,koi,koi,maʔai,ʔoi,,5,sharp,1396,SHARP,ABVD,,,sharp-14,train
+sharp-2,,,,masele,,māsila,2,sharp,1396,SHARP,ABVD,,,sharp-2,train
+sharp-66,ʔoi,koi,koi,,ʔoi,,4,sharp,1396,SHARP,ABVD,,,sharp-14,train
+short-10,,hakahaka,,saʔasaʔa,,,2,short,1645,SHORT,ABVD,,,short-10,train
+short-9,pōkole,poto,poto,poto,poto,,5,short,1645,SHORT,ABVD,,,short-9,train
+shoulder-8,poʔohiwi,pakihiwi,,,paʔufifi,,3,shoulder,1482,SHOULDER,ABVD,,,shoulder-8,train
+shyashamed-1,,whaka|maa,tāʔakamā,mā,,mā,4,"shy, ashamed",3805,SHY OR ASHAMED,ABVD,,,shyashamed-1,val
+six-1,ʔeono,ono,ono,ono,ono,ono,6,Six,1703,SIX,ABVD,,,six-1,test
+skin-1,ʔili,kiri,kiri,,ʔiri,kili,5,skin,763,SKIN,ABVD,,,skin-1,train
+sky-1,lani,rangi,rangi,laŋi,raʔi,laŋi,6,sky,1732,SKY,ABVD,,,sky-1,train
+small-1,iki,iti,iti,itiiti,iti,,5,small,1246,SMALL,ABVD,,,small-1,train
+smoke-2,uahi,au|ahi,,asu,auauahi,ʔahu,5,smoke,778,SMOKE (EXHAUST),ABVD,,,smoke-2,train
+snake-12,,,,ŋata,,ŋata,2,snake,730,SNAKE,ABVD,,,snake-12,train
+spider-1,,pungaawerewere,,ʔapoŋāleveleve,,,2,spider,843,SPIDER,ABVD,,,spider-1,train
+spider-39,,,tukutukuraʔonui,,tuutuurahonui,,2,spider,843,SPIDER,ABVD,,,spider-39,train
+spider-5,,,tukutukuraʔonui,,tuutuurahonui,,2,spider,843,SPIDER,ABVD,,,spider-39,train
+star-1,hōkū,whetuu,ʔeetuu,fetū,fetū,fetuʔu,6,star,1430,STAR,ABVD,,,star-1,val
+stickwood-1,lāʔau,raa|kau,raakau,lāʔau,raaʔau,ʔa|kau,6,stick/wood,1295,STICK,ABVD,,,stickwood-1,train
+stone-1,pōhaku,koowhatu,pooàtu,fatu,ʔoofaʔi,,5,stone,857,STONE,ABVD,,,stone-1,train
+stone-19,pōhaku,,pooàtu,,,,2,stone,857,STONE,ABVD,,,stone-1,train
+stone-39,,koowhatu,,,ʔoofaʔi,,2,stone,857,STONE,ABVD,,,stone-1,train
+stone-4,,,,maʔa,,maka,2,stone,857,STONE,ABVD,,,stone-4,train
+tail-10,huelo,whiore,,,ʔaero,,3,tail,1220,TAIL,ABVD,,,tail-10,train
+tail-13,,,ìku,,hiʔu,iku,3,tail,1220,TAIL,ABVD,,,tail-13,train
+ten-32,,ngahuru,ngaʔuru,gafulu,,,3,Ten,1515,TEN,ABVD,,,ten-32,train
+ten-5,anahulu,,ngaʔuru,,,hongofulu,3,Ten,1515,TEN,ABVD,,,ten-32,train
+that-1,,teenaa,,le|na,tenā,,3,that,78,THAT,ABVD,,,that-1,train
+that-65,la,teeraa,,lela,teeraa,,4,that,78,THAT,ABVD,,,that-65,val
+thatchroof-1,ako,,ato,ato,ato,ʔato,5,thatch/roof,2100,THATCH OR ROOF,ABVD,,,thatchroof-1,train
+they-1,lākou,raatou,rātou,lātou,raatou,kinautolu,6,they,817,THEY,ABVD,,,they-1,train
+they-72,lākou,raatou,rātou,lātou,raatou,,5,they,817,THEY,ABVD,,,they-1,train
+thick-3,mākolukolu,matotoru,maatoru,matolutolu,,matolu,5,thick,1244,THICK,ABVD,,,thick-3,train
+thin-1,,,,manifi,,manifi,2,thin,2308,THIN,ABVD,,,thin-1,val
+thin-5,lahi,rahirahi,rairai,,rairai,,4,thin,2308,THIN,ABVD,,,thin-5,val
+this-1,nei,teenei,,lenei,,,3,this,1214,THIS,ABVD,,,this-1,train
+this-45,kēia,,,,teie,,2,this,1214,THIS,ABVD,,,this-1,train
+this-7,kēia,teenei,,,teie,,3,this,1214,THIS,ABVD,,,this-1,train
+thou-1,ʔoe,koe,koe,ʔoe,ʔoe,koe,6,thou,1215,THOU,ABVD,,,thou-1,test
+three-1,kolu,toru,toru,,toru,tolu,5,Three,492,THREE,ABVD,,,three-1,test
+thunder-14,hekili,whatitiri,,fāititili,paatiri,,4,thunder,1150,THUNDER,ABVD,,,thunder-14,train
+tobite-1,,,kati,ʔati,ʔati,,3,to bite,1403,BITE,ABVD,,,tobite-1,val
+tobite-7,nahu,ngau,,,,,2,to bite,1403,BITE,ABVD,,,tobite-7,train
+tobite-8,,,,u,,uʔu,2,to bite,1403,BITE,ABVD,,,tobite-8,train
+tobite-9,,,eti,utia,,,2,to bite,1403,BITE,ABVD,,,tobite-9,train
+toblow-6,puhi,pupuhi,puì,,puhi,,4,to blow,175,BLOW (OF WIND),ABVD,,,toblow-6,train
+toblow-7,pā,,,,pā,,2,to blow,175,BLOW (OF WIND),ABVD,,,toblow-7,train
+toblow-8,,,angi,aŋi,,aŋi,3,to blow,175,BLOW (OF WIND),ABVD,,,toblow-8,train
+toblow-9,,,àrara,,farara,,2,to blow,175,BLOW (OF WIND),ABVD,,,toblow-9,test
+tobreathe-1,,,,mānava,,mānava,2,to breathe,1407,BREATHE,ABVD,,,tobreathe-1,train
+toburn-1,kuni,,tutungi,,tutuʔi,tutu,4,to burn,2102,BURN,ABVD,,,toburn-1,test
+toburn-7,kuni,,tutungi,,tutuʔi,,3,to burn,2102,BURN,ABVD,,,toburn-1,test
+toburn-8,,tahu,taʔu,tafu,,,3,to burn,2102,BURN,ABVD,,,toburn-8,train
+tobuy-7,,hoko,ʔoko,,hoʔo,,3,to buy,1869,BUY,ABVD,,,tobuy-7,train
+tochew-1,mama,,,mama,mama,mama,4,to chew,321,CHEW,ABVD,,,tochew-1,train
+tochew-7,,,,lamu,,lamu,2,to chew,321,CHEW,ABVD,,,tochew-7,train
+tochew-8,,,ngau-a,,ʔauʔau,,2,to chew,321,CHEW,ABVD,,,tochew-8,train
+tochoose-1,,whiri,ìri,filifili,,fili,4,to choose,1750,CHOOSE,ABVD,,,tochoose-1,test
+toclimb-32,,,,aʔe,ʔaʔe,kaka,3,to climb,1102,CLIMB,ABVD,,,toclimb-32,train
+toclimb-6,piʔi,piki,,piʔi,,,3,to climb,1102,CLIMB,ABVD,,,toclimb-6,train
+tocome-44,,,,sau,,haʔu,2,to come,1446,COME,ABVD,,,tocome-44,train
+tocook-10,,tao,,tao,ʔeu,,3,to cook,1100,COOK (SOMETHING),ABVD,,,tocook-10,val
+tocook-9,,,,,tunu,feitunu,2,to cook,1100,COOK (SOMETHING),ABVD,,,tocook-9,train
+tocount-8,,tatau,tatau,faitau,,,3,to count,1420,COUNT,ABVD,,,tocount-8,train
+tocount-80,,tatau,tatau,,,,2,to count,1420,COUNT,ABVD,,,tocount-8,train
+tocry-1,kani,tangi,tangi,taŋi,taʔi,taŋi,6,to cry,1839,CRY,ABVD,,,tocry-1,train
+tocuthack-1,,taa,tarai,,,,2,"to cut, hack",3889,CUT OR HACK,ABVD,,,tocuthack-1,train
+tocuthack-14,moku,,motu,faʔa-mutu,,,3,"to cut, hack",3889,CUT OR HACK,ABVD,,,tocuthack-14,val
+todiebedead-1,make,mate,mate,mate,mate,mate,6,"to die, be dead",2101,BE DEAD OR DIE,ABVD,,,todiebedead-1,train
+todiebedead-3,,,poʔe,,pohe,,2,"to die, be dead",2101,BE DEAD OR DIE,ABVD,,,todiebedead-3,train
+todig-1,ʔeli,keri,keri,ʔeli,ʔeru,keli,6,to dig,1418,DIG,ABVD,,,todig-1,train
+todream-27,moemoeā,moemoeaa,moemoeaa,,moemoeaa,,4,to dream,1920,DREAM (SOMETHING),ABVD,,,todream-27,train
+todream-36,,,,miti,,misi,2,to dream,1920,DREAM (SOMETHING),ABVD,,,salt-7,train
+todream-7,,moemoeaa,moemoeaa,,moemoeaa,,3,to dream,1920,DREAM (SOMETHING),ABVD,,,todream-27,train
+todrink-1,inu,inu,inu,inu,inu,inu,6,to drink,1401,DRINK,ABVD,,,todrink-1,train
+toeat-1,ʔai,kai,kai-nga,ʔai,,kai,5,to eat,1336,EAT,ABVD,,,toeat-1,train
+toeat-47,ʔai,kai,kai-nga,ʔai,ʔai,kai,6,to eat,1336,EAT,ABVD,,,toeat-1,train
+tofall-124,,,topa,,topa,,2,to fall,1280,FALL,ABVD,,,tofall-124,train
+tofear-1,makaʔu,mataku,mataku,mataʔu,mataʔu,,5,to fear,1419,FEAR (BE AFRAID),ABVD,,,tofear-1,train
+tofear-92,,,,fefe,,manavahē,2,to fear,1419,FEAR (BE AFRAID),ABVD,,,tofear-92,train
+toflow-10,kahe,tere,taʔe,tafe,tahe,tafe,6,to flow,2003,FLOW,ABVD,,,toflow-10,train
+tofly-11,lele,rere,rere,lele,rere,,5,to fly,1441,FLY (MOVE THROUGH AIR),ABVD,,,tofly-11,train
+togrow-1,kupu,tupu,tupu,tupu,tupu,tupu,6,to grow,479,GROW,ABVD,,,togrow-1,train
+tohear-1,hoʔolono,rongo,rongo,faʔa-loŋo,faʔaroʔo,fenoŋo,6,to hear,1408,HEAR,ABVD,,,tohear-1,train
+tohide-1,hūnā,huna,,,taapuni,,3,to hide,2486,HIDE,ABVD,,,tohide-1,test
+tohide-16,hūnā,huna,,,,,2,to hide,2486,HIDE,ABVD,,,tohide-1,test
+tohit-10,,,,tā,tātā,tā,3,to hit,1433,HIT,ABVD,,,tohit-10,train
+tohit-7,,patu,patu,,,,2,to hit,1433,HIT,ABVD,,,tohit-7,test
+tohit-8,kuʔi,,tuki,tuʔi,,,3,to hit,1433,HIT,ABVD,,,tohit-8,train
+tohold-12,,,kuku-a,ʔuʔu,,kuku,3,to hold,1448,HOLD,ABVD,,,tohold-12,train
+tohunt-6,hahai,whaiwhai,,,,,2,to hunt,1435,HUNT,ABVD,,,tohunt-6,train
+tokill-2,hoʔomake,,,tāmate,haʔamate,tāmateʔi,4,to kill,1417,KILL,ABVD,,,tokill-2,train
+tokill-9,,patu,putu,,,,2,to kill,1417,KILL,ABVD,,,tohit-7,test
+toknowbeknowledgeable-12,ʔike,,kite,,ʔite,,3,"to know, be knowledgeable",1410,KNOW (SOMETHING),ABVD,,,toknowbeknowledgeable-12,train
+toknowbeknowledgeable-13,,,,ilo-a,,ʔilo,2,"to know, be knowledgeable",1410,KNOW (SOMETHING),ABVD,,,toknowbeknowledgeable-13,train
+tolaugh-7,ʔaka,kata,kata,ʔata,ʔata,kata,6,to laugh,1355,LAUGH,ABVD,,,tolaugh-7,test
+toliedown-10,,takoto,ʔakatakoto,taʔoto,taʔoto,tokoto,5,to lie down,215,LIE DOWN,ABVD,,,toliedown-10,train
+tolivebealive-1,,,mauri,maui,,moʔui,3,"to live, be alive",1422,BE ALIVE,ABVD,,,tolivebealive-1,train
+tolivebealive-6,ola,ora,ora,ola,ora,,5,"to live, be alive",1422,BE ALIVE,ABVD,,,tolivebealive-6,train
+tongue-15,alelo,arero,arero,alelo,arero,ʔelelo,6,tongue,1205,TONGUE,ABVD,,,tongue-15,train
+toopenuncover-8,,huaki,,,huaʔi,,2,"to open, uncover",1156,OPEN,ABVD,,,toopenuncover-8,train
+tooth-1,niho,niho,niʔo,nifo,niho,nifo,6,tooth,1380,TOOTH,ABVD,,,tooth-1,train
+toplant-2,kanu,,,,tanu,,2,to plant,1486,PLANT (SOMETHING),ABVD,,,toplant-2,test
+toplant-4,,too,,tō,,tō,3,to plant,1486,PLANT (SOMETHING),ABVD,,,toplant-4,train
+topoundbeat-2,kuʔi,tuki,tuki,tuʔituʔi,tuʔi,tuki,6,"to pound, beat",354,POUND,ABVD,,,tohit-8,train
+tosay-11,ʔōlelo,koorero,kōrero,,,,3,to say,1458,SAY,ABVD,,,tosay-11,train
+tosay-60,,,araara,tautala,,,2,to say,1458,SAY,ABVD,,,tosay-60,train
+toscratch-9,,rakuraku,,,raʔuraʔu,vaku,3,to scratch,1436,SCRATCH,ABVD,,,toscratch-9,train
+tosee-1,ʔike,kite,kite,ʔite,ʔite,,5,to see,1409,SEE,ABVD,,,toknowbeknowledgeable-12,train
+tosee-132,,,,,hiʔo,sio,2,to see,1409,SEE,ABVD,,,tosee-132,val
+tosew-13,,tui,tui,,,tuitui,3,to sew,1457,SEW,ABVD,,,tosew-13,test
+toshoot-1,pana,whana,taaàna,fana,fana,fana,6,to shoot,1172,SHOOT,ABVD,,,toshoot-1,train
+tosit-16,noho,noho,noʔo,nofo,noho,nofo,6,to sit,1416,SIT,ABVD,,,tosit-16,train
+tosleep-10,moe,moe,moe,moe,moe,mohe,6,to sleep,1585,SLEEP,ABVD,,,tosleep-10,train
+tosniffsmell-9,honi,hongi,ʔongi,soŋi,hoʔi,,5,"to sniff, smell",1586,SMELL (PERCEIVE),ABVD,,,tosniffsmell-9,train
+tospit-120,kuha,tuha,tutuà,,tutuha,,4,to spit,1440,SPIT,ABVD,,,tospit-120,train
+tospit-14,,,,anu,,ʔanuhi,2,to spit,1440,SPIT,ABVD,,,tospit-14,train
+tosplit-4,wāhi,waawaahi,,,vaahi,fahi,4,to split,1437,SPLIT,ABVD,,,tosplit-4,train
+tosqueeze-13,,,tatau,,,tatau,2,to squeeze,1414,SQUEEZE,ABVD,,,tocount-8,train
+tosqueeze-14,,,,ʔoʔomi,ʔuʔumu,,2,to squeeze,1414,SQUEEZE,ABVD,,,tosqueeze-14,test
+tostabpierce-52,,,,tui,,tuiʔi,2,"to stab, pierce",1434,STAB,ABVD,,,tostabpierce-52,train
+tostabpierce-67,,oka,,,,hoka,2,"to stab, pierce",1434,STAB,ABVD,,,tostabpierce-67,train
+tostand-2,kū,tuu,tuu,tū,tū,tuʔu,6,to stand,1442,STAND,ABVD,,,tostand-2,test
+tosteal-5,ʔaihue,taahae,,,,,2,to steal,713,STEAL,ABVD,,,tosteal-5,train
+tosteal-65,,,keiaa,,ʔeiaa,,2,to steal,713,STEAL,ABVD,,,tosteal-65,train
+tosteal-7,,,keiaa,,ʔeiaa,kaihaʔa,3,to steal,713,STEAL,ABVD,,,tosteal-65,train
+tosuck-25,,,,susu,,huhu,2,to suck,1421,SUCK,ABVD,,,breast-1,train
+tosuck-9,,ngote,ngote-a,,ʔote,,3,to suck,1421,SUCK,ABVD,,,tosuck-9,train
+toswell-24,,puku,,,puʔu,,2,to swell,1573,SWELL,ABVD,,,toswell-24,train
+toswell-7,hū,,,fula,,pupula,3,to swell,1573,SWELL,ABVD,,,toswell-7,test
+toswim-5,ʔau,kauhoe,kau,ʔaʔau,ʔau,kakau,6,to swim,1439,SWIM,ABVD,,,toswim-5,val
+tothink-7,manaʔo,,,,manaʔo,,2,to think,2271,THINK,ABVD,,,tothink-7,train
+totieupfasten-148,hīkiʔi,,ìitiki-a,,fētiʔi,,3,"to tie up, fasten",1094,FASTEN,ABVD,,,totieupfasten-148,train
+totieupfasten-15,,,,noa,,nonoʔo,2,"to tie up, fasten",1094,FASTEN,ABVD,,,totieupfasten-15,test
+toturn-15,huli,huri,,,,,2,to turn,1588,TURN,ABVD,,,toturn-15,test
+toturn-2,,,,fāliu,,liliu,2,to turn,1588,TURN,ABVD,,,toturn-2,val
+tovomit-1,,,puaki,puaʔi,,,2,to vomit,1278,VOMIT,ABVD,,,tovomit-1,train
+tovomit-31,luaʔi,ruaki,ruaki,luaʔi,faʔarūaʔi,,5,to vomit,1278,VOMIT,ABVD,,,tovomit-31,train
+tovomit-8,luaʔi,ruaki,ruaki,luaʔi,faʔarūaʔi,lua,6,to vomit,1278,VOMIT,ABVD,,,tovomit-31,train
+towalk-34,,,,alu,,ʔalu,2,to walk,1443,WALK,ABVD,,,towalk-34,train
+towalk-6,hele,haere-a-waewae,àere,,haere,,4,to walk,1443,WALK,ABVD,,,towalk-6,train
+towork-10,hana,,àngaànga,,haʔa,,3,to work,1086,WORK (ACTIVITY),ABVD,,,towork-10,train
+towork-11,,,,ŋalue,,ŋāue,2,to work,1086,WORK (ACTIVITY),ABVD,,,towork-11,test
+toyawn-19,hāmama,haamama,àamama,māvava,haamama,mamao,6,to yawn,1028,YAWN,ABVD,,,toyawn-19,test
+toyawn-28,hāmama,haamama,àamama,,haamama,mamao,5,to yawn,1028,YAWN,ABVD,,,toyawn-19,test
+twenty-4,,,,,taʔau,tekau,2,Twenty,1710,TWENTY,ABVD,,,twenty-4,val
+two-1,lua,rua,rua,,rua,ua,5,Two,1498,TWO,ABVD,,,two-1,train
+warm-1,hahana,mahana,maàna,,maahanahana,mafana,5,warm,1232,WARM,ABVD,,,warm-1,train
+warm-72,,mahana,maàna,,maahanahana,mafana,4,warm,1232,WARM,ABVD,,,warm-1,train
+warm-8,wela,,,,vera,,2,warm,1232,WARM,ABVD,,,warm-8,train
+water-2,wai,wai,vai,vai,vai,vai,6,water,948,WATER,ABVD,,,water-2,train
+we-1,,,tātou,tātou,,kitautolu,3,we,1212,WE,ABVD,,,we-1,test
+we-2,,,mātou,mātou,,kimautolu,3,we,1212,WE,ABVD,,,we-2,train
+wet-10,,maakuu,,,,viku,2,wet,1726,WET,ABVD,,,wet-10,val
+wet-9,,,tārari,,rari,,2,wet,1726,WET,ABVD,,,wet-9,train
+what-1,aha,aha,aà,,aha,,4,what?,1236,WHAT,ABVD,,,what-1,train
+when-5,,aahea,aaʔea,,,,2,when?,1238,WHEN,ABVD,,,when-5,test
+where-3,,whea,ʔea,,hea,,3,where?,1237,WHERE,ABVD,,,where-3,val
+white-66,,,,sina,,hinehina,2,white,1335,WHITE,ABVD,,,white-66,train
+white-8,kea,,tea,tea,teatea,,4,white,1335,WHITE,ABVD,,,white-8,train
+who-1,wai,wai,ài,,vai,hai,5,who?,1235,WHO,ABVD,,,water-2,train
+who-19,wai,wai,,,vai,,3,who?,1235,WHO,ABVD,,,water-2,train
+wide-21,ākea,,ātea,,,,2,wide,1243,WIDE,ABVD,,,wide-21,train
+wide-7,,,ʔaʔano,,ʔaʔano,,2,wide,1243,WIDE,ABVD,,,wide-7,train
+wide-73,,,,lautele,,laulahi,2,wide,1243,WIDE,ABVD,,,wide-73,train
+wife-5,wahine,wahine,vaʔine,,vahine,,4,wife,1199,WIFE,ABVD,,,wife-5,train
+wind-1,makani,,matangi,mat|aŋi,mataʔi,mat|aŋi,5,wind,960,WIND,ABVD,,,wind-1,train
+wing-1,ʔēheu,,peeàu,ʔapaʔau,,kapakau,4,wing,1257,WING,ABVD,,,wing-1,train
+wing-59,,,,ʔapaʔau,,kapakau,2,wing,1257,WING,ABVD,,,wing-1,train
+wing-81,ʔēheu,,peeàu,,,,2,wing,1257,WING,ABVD,,,wing-1,train
+wing-9,,parirau,,,pererau,,2,wing,1257,WING,ABVD,,,wing-9,train
+womanfemale-1,wahine,wahine,,fafine,vahine,fefine,5,woman/female,2105,FEMALE PERSON,ABVD,,,wife-5,train
+womanfemale-106,wahine,wahine,vaìne,fafine,vahine,fefine,6,woman/female,2105,FEMALE PERSON,ABVD,,,wife-5,train
+womanfemale-116,wahine,wahine,vaìne,,vahine,,4,woman/female,2105,FEMALE PERSON,ABVD,,,wife-5,train
+woodsforest-13,,,ururaakau,,ururaaʔau,,2,woods/forest,420,FOREST,ABVD,,,woodsforest-13,train
+woodsforest-14,,,vao,vao,,vao,3,woods/forest,420,FOREST,ABVD,,,woodsforest-14,train
+woodsforest-15,,,ururaakau,,ururaaʔau,,2,woods/forest,420,FOREST,ABVD,,,woodsforest-13,train
+woodsforest-16,,ngahere,ngaangaaere,,,,2,woods/forest,420,FOREST,ABVD,,,woodsforest-16,train
+wormearthworm-7,koʔe,noke,toke,toʔe,toʔe,,5,worm (earthworm),1219,WORM,ABVD,,,wormearthworm-7,test
+wormearthworm-9,,,,ʔelemutu,,kelemutu,2,worm (earthworm),1219,WORM,ABVD,,,wormearthworm-9,test
+year-1,,tau,tau,tau|saŋa,,taʔu,4,year,1226,YEAR,ABVD,,,year-1,test
+year-7,makahiki,,mataìti,,matahiti,,3,year,1226,YEAR,ABVD,,,year-7,train
+yellow-10,lena,,rengarenga,lega,reʔareʔa,eŋeeŋa,5,yellow,1424,YELLOW,ABVD,,,yellow-10,train
+you-16,ʔoukou,koutou,kootou,ʔoutou,ʔoutou,,5,you,1213,YOU,ABVD,,,you-16,train
