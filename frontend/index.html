@@ -5,21 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Polynesian Language Reconstruction</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
+    <nav class="nav">
+        <a href="/" aria-current="page">Predict</a>
+        <a href="/about">About</a>
+    </nav>
+
     <main class="container">
 
-        <h1>Polynesian Language Reconstruction</h1>
+        <header class="header">
+            <h1>Polynesian Language Reconstruction</h1>
 
-        <p class="description">
-            Predict missing words using related Polynesian languages.
-        </p>
+            <p class="description">
+                Predict missing words using related Polynesian languages.
+            </p>
+        </header>
 
         <!-- Step 1: Language -->
         <section>
-            <h2>Step 1: Select Target Language</h2>
+            <h2><span class="step">1</span>Select Target Language</h2>
 
             <select id="language">
                 <option value="Samoan">Samoan</option>
@@ -32,7 +42,7 @@
 
         <!-- Step 2: Search Concept -->
         <section>
-            <h2>Step 2: Select Concept</h2>
+            <h2><span class="step">2</span>Select Concept</h2>
 
             <input
                 type="search"
@@ -51,7 +61,7 @@
 
         <!-- Step 3: Predict -->
         <section>
-            <h2>Step 3: Generate Prediction</h2>
+            <h2><span class="step">3</span>Generate Prediction</h2>
 
             <button id="predictButton" type="button" disabled>
                 Predict Word
@@ -105,10 +115,63 @@
                     <strong id="editDistance"></strong>
                 </div>
 
+                <div class="result-actions">
+                    <button id="showFlowButton" type="button" class="secondary-button">
+                        View flow chart
+                    </button>
+                </div>
+
             </div>
         </section>
 
     </main>
+
+    <!-- Flow chart pop-up: sister words -> model -> predicted word -->
+    <div id="flowModal" class="modal" hidden>
+        <div class="modal-backdrop" data-close></div>
+
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="flowTitle">
+            <header class="modal-header">
+                <div>
+                    <h2 id="flowTitle">How the word was predicted</h2>
+                    <p id="flowSubtitle" class="modal-subtitle"></p>
+                </div>
+                <button type="button" class="icon-button" data-close aria-label="Close">
+                    &times;
+                </button>
+            </header>
+
+            <div id="flow" class="flow">
+                <svg id="flowLines" class="flow-lines" aria-hidden="true"></svg>
+
+                <div class="flow-column">
+                    <p class="flow-label">Known sister words</p>
+                    <div id="flowSources" class="flow-sources"></div>
+                </div>
+
+                <div class="flow-column flow-middle">
+                    <div id="flowModel" class="flow-node flow-model">
+                        <span class="flow-model-title">Seq2Seq model</span>
+                        <span class="flow-model-sub">encoder · attention · decoder</span>
+                    </div>
+                </div>
+
+                <div class="flow-column">
+                    <p class="flow-label">Output</p>
+                    <div id="flowPredicted" class="flow-node flow-predicted">
+                        <span id="flowPredictedLanguage" class="flow-lang"></span>
+                        <span id="flowPredictedWord" class="flow-word"></span>
+                        <span class="flow-tag">Predicted</span>
+                    </div>
+                    <div id="flowActual" class="flow-node flow-actual">
+                        <span class="flow-lang">Actual word</span>
+                        <span id="flowActualWord" class="flow-word"></span>
+                        <span id="flowMatch" class="flow-match"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const languageSelect =
@@ -304,8 +367,11 @@
             document.getElementById("actualWord").textContent =
                 displayValue(data.actual_word);
 
-            document.getElementById("exactMatch").textContent =
+            const exactMatch = document.getElementById("exactMatch");
+            exactMatch.textContent =
                 displayValue(data.exact_match, "Not calculated");
+            // Colors the Yes/No pill green or red
+            exactMatch.dataset.match = String(data.exact_match);
 
             document.getElementById("editDistance").textContent =
                 displayValue(
@@ -315,7 +381,160 @@
 
             emptyResult.hidden = true;
             results.hidden = false;
+
+            lastResult = data;
+            openFlow(data);
         }
+
+        // ----- Flow chart pop-up -----
+
+        const flowModal = document.getElementById("flowModal");
+        const flow = document.getElementById("flow");
+        const flowLines = document.getElementById("flowLines");
+        const flowSources = document.getElementById("flowSources");
+        const flowModel = document.getElementById("flowModel");
+        const flowPredicted = document.getElementById("flowPredicted");
+
+        const LANGUAGE_NAMES = { maori: "Māori" };
+        const SVG_NS = "http://www.w3.org/2000/svg";
+
+        let lastResult = null;
+
+        function languageName(code) {
+            const key = String(code).toLowerCase();
+            return LANGUAGE_NAMES[key] || key.charAt(0).toUpperCase() + key.slice(1);
+        }
+
+        function openFlow(data) {
+            document.getElementById("flowSubtitle").textContent =
+                displayValue(data.concept);
+
+            flowSources.replaceChildren();
+            Object.entries(data.related_words || {}).forEach(([lang, word], i) => {
+                const node = document.createElement("div");
+                node.className = "flow-node flow-source";
+                node.style.setProperty("--i", i);
+
+                const name = document.createElement("span");
+                name.className = "flow-lang";
+                name.textContent = languageName(lang);
+
+                const form = document.createElement("span");
+                form.className = "flow-word";
+                form.textContent = word;
+
+                node.append(name, form);
+                flowSources.appendChild(node);
+            });
+
+            document.getElementById("flowPredictedLanguage").textContent =
+                languageName(data.language);
+            document.getElementById("flowPredictedWord").textContent =
+                displayValue(data.predicted_word);
+            document.getElementById("flowActualWord").textContent =
+                displayValue(data.actual_word);
+
+            const match = document.getElementById("flowMatch");
+            match.textContent = data.exact_match ? "Exact match" : "Mismatch";
+            match.dataset.match = String(data.exact_match);
+
+            // Restart the entrance animations each time it opens
+            flow.classList.remove("is-playing");
+            flowModal.hidden = false;
+            document.body.classList.add("modal-open");
+            drawFlowLines();
+            void flow.offsetWidth;
+            flow.classList.add("is-playing");
+
+            flowModal.querySelector(".icon-button").focus();
+        }
+
+        function closeFlow() {
+            flowModal.hidden = true;
+            document.body.classList.remove("modal-open");
+            document.getElementById("showFlowButton").focus();
+        }
+
+        // Curved connector from one box edge to another
+        function connector(from, to, horizontal) {
+            const box = flow.getBoundingClientRect();
+            let x1, y1, x2, y2, d;
+
+            if (horizontal) {
+                x1 = from.right - box.left;
+                y1 = from.top + from.height / 2 - box.top;
+                x2 = to.left - box.left;
+                y2 = to.top + to.height / 2 - box.top;
+                const bend = (x2 - x1) / 2;
+                d = `M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`;
+            } else {
+                x1 = from.left + from.width / 2 - box.left;
+                y1 = from.bottom - box.top;
+                x2 = to.left + to.width / 2 - box.left;
+                y2 = to.top - box.top;
+                const bend = (y2 - y1) / 2;
+                d = `M ${x1} ${y1} C ${x1} ${y1 + bend}, ${x2} ${y2 - bend}, ${x2} ${y2}`;
+            }
+            return d;
+        }
+
+        function addPath(d, direction) {
+            const path = document.createElementNS(SVG_NS, "path");
+            path.setAttribute("d", d);
+            path.setAttribute("pathLength", "1");
+            path.setAttribute("class", `flow-path flow-path-${direction}`);
+            path.setAttribute("marker-end", `url(#flowArrow-${direction})`);
+            flowLines.appendChild(path);
+        }
+
+        function arrowMarker(direction) {
+            return `
+                <marker id="flowArrow-${direction}" viewBox="0 0 10 10" refX="8" refY="5"
+                        markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-arrow-${direction}"></path>
+                </marker>`;
+        }
+
+        function drawFlowLines() {
+            const box = flow.getBoundingClientRect();
+            flowLines.setAttribute("width", box.width);
+            flowLines.setAttribute("height", box.height);
+            flowLines.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+            flowLines.innerHTML =
+                `<defs>${arrowMarker("in")}${arrowMarker("out")}</defs>`;
+
+            const model = flowModel.getBoundingClientRect();
+            const sources = flowSources.getBoundingClientRect();
+            // Side by side on wide screens, stacked on phones
+            const horizontal = model.left >= sources.right - 1;
+
+            for (const source of flowSources.children) {
+                addPath(connector(source.getBoundingClientRect(), model, horizontal), "in");
+            }
+            addPath(connector(model, flowPredicted.getBoundingClientRect(), horizontal), "out");
+        }
+
+        document.getElementById("showFlowButton").addEventListener("click", () => {
+            if (lastResult) {
+                openFlow(lastResult);
+            }
+        });
+
+        flowModal.querySelectorAll("[data-close]").forEach(element =>
+            element.addEventListener("click", closeFlow)
+        );
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && !flowModal.hidden) {
+                closeFlow();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (!flowModal.hidden) {
+                drawFlowLines();
+            }
+        });
 
         // Send a real prediction request to FastAPI.
         async function predictWord() {
