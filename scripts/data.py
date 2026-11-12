@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -9,7 +10,10 @@ except ImportError:
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TABLE_PATH = ROOT / "data" / "processed" / "cognate_table.csv"
+TABLE_PATH = Path(os.environ.get(
+    "COGNATE_TABLE",
+    str(ROOT / "data" / "processed" / "cognate_table.csv")
+))
 
 LANGUAGES = ["hawaiian", "maori", "rarotongan", "samoan", "tahitian", "tongan"]
 
@@ -32,7 +36,10 @@ def load_examples(table_path=TABLE_PATH):
         for target in present:
             sources = {lang: form for lang, form in present.items() if lang != target}
             if sources:
-                examples[assign_split(cognateset_id)].append({
+                split = row["split"] if "split" in table.columns else assign_split(cognateset_id)
+                if split not in examples:
+                    raise ValueError(f"Invalid split: {split}")
+                examples[split].append({
                     "cognateset_id": cognateset_id,
                     "target_language": target,
                     "target": present[target],

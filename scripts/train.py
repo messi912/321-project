@@ -1,4 +1,5 @@
 import random
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -10,7 +11,10 @@ from metrics import score, summarize
 from model import Seq2Seq
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECKPOINT_PATH = ROOT / "data" / "models" / "seq2seq.pt"
+CHECKPOINT_PATH = Path(os.environ.get(
+    "SEQ2SEQ_CHECKPOINT",
+    str(ROOT / "data" / "models" / "seq2seq.pt")
+))
 
 CONFIG = {
     "embed_dim": 64,
@@ -136,7 +140,7 @@ def train():
             print(f"No improvement for {PATIENCE} epochs, stopping.")
             break
 
-    print(f"\nBest val NED {best_distance:.3f} at epoch {best_epoch}; saved to {CHECKPOINT_PATH.relative_to(ROOT)}")
+    print(f"\nBest val NED {best_distance:.3f} at epoch {best_epoch}; saved to {CHECKPOINT_PATH.resolve().relative_to(ROOT)}")
     model, vocab = load_checkpoint()
     print("\nVal results for the saved model:")
     print(summarize(evaluate(model, vocab, examples["val"])).to_string())
