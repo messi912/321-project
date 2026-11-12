@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Polynesian Language Reconstruction</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
@@ -23,7 +24,7 @@
             <select id="language">
                 <option value="Samoan">Samoan</option>
                 <option value="Tongan">Tongan</option>
-                <option value="Maori">Maori</option>
+                <option value="Maori">Māori</option>
                 <option value="Hawaiian">Hawaiian</option>
                 <option value="Rarotongan">Rarotongan</option>
             </select>
@@ -37,31 +38,13 @@
                 type="search"
                 id="conceptSearch"
                 list="conceptList"
-                placeholder="Type to search concepts..."
+                placeholder="Loading concepts..."
                 autocomplete="off"
                 aria-label="Search for a concept"
+                disabled
             >
 
-            <datalist id="conceptList">
-                <!-- Example concepts.
-                     Replace with the full dataset list. -->
-                <option value="water"></option>
-                <option value="fire"></option>
-                <option value="hand"></option>
-                <option value="mother"></option>
-                <option value="father"></option>
-                <option value="fish"></option>
-                <option value="tree"></option>
-                <option value="stone"></option>
-                <option value="house"></option>
-                <option value="sun"></option>
-                <option value="moon"></option>
-                <option value="bird"></option>
-                <option value="sea"></option>
-                <option value="earth"></option>
-                <option value="eye"></option>
-                <option value="foot"></option>
-            </datalist>
+            <datalist id="conceptList"></datalist>
 
             <p id="conceptError" class="hint"></p>
         </section>
@@ -70,7 +53,7 @@
         <section>
             <h2>Step 3: Generate Prediction</h2>
 
-            <button id="predictButton" type="button">
+            <button id="predictButton" type="button" disabled>
                 Predict Word
             </button>
 
@@ -128,12 +111,14 @@
     </main>
 
     <script>
-        // Get HTML elements
         const languageSelect =
             document.getElementById("language");
 
         const conceptSearch =
             document.getElementById("conceptSearch");
+
+        const conceptList =
+            document.getElementById("conceptList");
 
         const conceptError =
             document.getElementById("conceptError");
@@ -150,40 +135,39 @@
         const emptyResult =
             document.getElementById("emptyResult");
 
+        let availableConcepts = [];
         let isLoading = false;
+        let conceptRequestId = 0;
 
-        // Get available concepts from datalist
-        const availableConcepts = Array.from(
-            document.querySelectorAll("#conceptList option")
-        ).map(option => option.value);
-
-        // Check if the entered concept is valid
-        function getSelectedConcept() {
-            const typed = conceptSearch.value
-                .trim()
-                .toLowerCase();
-
-            return availableConcepts.find(
-                concept => concept.toLowerCase() === typed
-            ) || null;
-        }
-
-        // Reset results when selection changes
+        // Clear previous prediction results.
         function resetResults() {
             results.hidden = true;
             emptyResult.hidden = false;
             status.textContent = "";
         }
 
-        // Validate concept
+        // Find the selected cognate-set ID.
+        function getSelectedConcept() {
+            const typed = conceptSearch.value
+                .trim()
+                .toLowerCase();
+
+            const selected = availableConcepts.find(
+                item => item.label.toLowerCase() === typed
+            );
+
+            return selected ? selected.id : null;
+        }
+
+        // Validate the selected concept.
         function validateConcept() {
             const concept = getSelectedConcept();
 
             if (!concept) {
                 conceptError.textContent =
                     conceptSearch.value.trim()
-                    ? "Please select a concept from the suggestions."
-                    : "";
+                        ? "Please select a concept from the suggestions."
+                        : "";
 
                 predictButton.disabled = true;
                 return false;
@@ -194,20 +178,93 @@
             return true;
         }
 
+        // Load real concepts from FastAPI for the selected language.
+        async function loadConcepts() {
+            const requestId = ++conceptRequestId;
+            const language = languageSelect.value;
+
+            availableConcepts = [];
+            conceptList.replaceChildren();
+            conceptSearch.value = "";
+            conceptSearch.disabled = true;
+            conceptSearch.placeholder = "Loading concepts...";
+            predictButton.disabled = true;
+            conceptError.textContent = "";
+
+            resetResults();
+
+            try {
+                const response = await fetch(
+                    "/concepts?language=" +
+                    encodeURIComponent(language)
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Could not load concepts: " + response.status
+                    );
+                }
+
+                const concepts = await response.json();
+
+                // Ignore results from an older language selection.
+                if (requestId !== conceptRequestId) {
+                    return;
+                }
+
+                availableConcepts = concepts;
+
+                for (const concept of concepts) {
+                    const option = document.createElement("option");
+                    option.value = concept.label;
+                    conceptList.appendChild(option);
+                }
+
+                conceptSearch.disabled = false;
+                conceptSearch.placeholder =
+                    "Type to search concepts...";
+
+                if (concepts.length === 0) {
+                    conceptError.textContent =
+                        "No documented concepts available for this language.";
+                    conceptSearch.disabled = true;
+                }
+
+            } catch (error) {
+                if (requestId !== conceptRequestId) {
+                    return;
+                }
+
+                console.error(error);
+
+                conceptSearch.placeholder =
+                    "Concepts unavailable";
+
+                conceptError.textContent =
+                    "Could not load concepts from the backend.";
+            }
+        }
+
+        // Reset results when the user edits a selection.
         conceptSearch.addEventListener("input", () => {
             resetResults();
+
             if (!isLoading) {
                 validateConcept();
             }
         });
 
-        languageSelect.addEventListener("change", resetResults);
+        languageSelect.addEventListener("change", () => {
+            loadConcepts();
+        });
 
-        // Format returned data
+        // Format API response values for display.
         function displayValue(value, fallback = "Not available") {
-            if (value === null ||
+            if (
+                value === null ||
                 value === undefined ||
-                value === "") {
+                value === ""
+            ) {
                 return fallback;
             }
 
@@ -230,7 +287,7 @@
             return String(value);
         }
 
-        // Display prediction results
+        // Show the prediction and its comparison.
         function showResults(data) {
             document.getElementById("resultLanguage").textContent =
                 displayValue(data.language);
@@ -260,7 +317,7 @@
             results.hidden = false;
         }
 
-        // Send request to FastAPI
+        // Send a real prediction request to FastAPI.
         async function predictWord() {
             if (isLoading || !validateConcept()) {
                 return;
@@ -272,6 +329,8 @@
             isLoading = true;
             predictButton.disabled = true;
             predictButton.textContent = "Predicting...";
+            languageSelect.disabled = true;
+            conceptSearch.disabled = true;
 
             resetResults();
             status.textContent = "Generating prediction...";
@@ -289,31 +348,42 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error("Server error: " + response.status);
+                    let message = "Server error: " + response.status;
+
+                    try {
+                        const errorData = await response.json();
+                        message = errorData.detail || message;
+                    } catch (_) {
+                        // Keep the default error message.
+                    }
+
+                    throw new Error(message);
                 }
 
                 const data = await response.json();
 
                 showResults(data);
-                status.textContent = "Request completed.";
+                status.textContent = "Prediction completed.";
 
             } catch (error) {
                 console.error(error);
+
                 status.textContent =
-                    "Error connecting to backend. Please try again.";
+                    "Prediction failed: " + error.message;
 
             } finally {
                 isLoading = false;
                 predictButton.textContent = "Predict Word";
+                languageSelect.disabled = false;
+                conceptSearch.disabled = false;
                 validateConcept();
             }
         }
 
         predictButton.addEventListener("click", predictWord);
 
-        // Initial validation
-        validateConcept();
+        // Load dataset concepts when the page first opens.
+        loadConcepts();
     </script>
-
 </body>
 </html>
