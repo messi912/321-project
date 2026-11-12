@@ -1,3 +1,4 @@
+import argparse
 import random
 import os
 from pathlib import Path
@@ -19,7 +20,7 @@ CHECKPOINT_PATH = Path(os.environ.get(
 CONFIG = {
     "embed_dim": 64,
     "hidden_dim": 128,
-    "dropout": 0.3,
+    "dropout": 0.35,
 }
 LEARNING_RATE = 1e-3
 BATCH_SIZE = 32
@@ -98,16 +99,18 @@ def load_checkpoint(path=CHECKPOINT_PATH):
     return model, vocab
 
 
-def train():
-    random.seed(SEED)
-    torch.manual_seed(SEED)
+def train(seed=SEED, checkpoint_path=CHECKPOINT_PATH, verbose=True):
+    """Train one model, keep the epoch with the best val NED, and return its val results."""
+    random.seed(seed)
+    torch.manual_seed(seed)
+    log = print if verbose else (lambda *args, **kwargs: None)
 
     examples = load_examples()
     vocab = Vocab.from_examples(examples["train"])
-    print("Examples per split:", {name: len(split) for name, split in examples.items()})
+    log("Examples per split:", {name: len(split) for name, split in examples.items()})
 
     model = Seq2Seq(len(vocab), vocab.pad_id, **CONFIG)
-    print(f"Parameters: {sum(p.numel() for p in model.parameters()):,}")
+    log(f"Parameters: {sum(p.numel() for p in model.parameters()):,}")
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     loss_function = nn.CrossEntropyLoss(ignore_index=vocab.pad_id)
 
@@ -132,19 +135,58 @@ def train():
         improved = distance < best_distance
         if improved:
             best_distance, best_epoch = distance, epoch
-            save_checkpoint(model, vocab)
+            save_checkpoint(model, vocab, checkpoint_path)
         if improved or epoch % 10 == 0:
-            print(f"epoch {epoch:>3}  loss {total_loss / len(train_examples):.3f}  "
-                  f"val acc {val['exact'].mean():.3f}  val NED {distance:.3f}{'  *' if improved else ''}")
+            log(f"epoch {epoch:>3}  loss {total_loss / len(train_examples):.3f}  "
+                f"val acc {val['exact'].mean():.3f}  val NED {distance:.3f}{'  *' if improved else ''}")
         if epoch - best_epoch >= PATIENCE:
-            print(f"No improvement for {PATIENCE} epochs, stopping.")
+            log(f"No improvement for {PATIENCE} epochs, stopping.")
             break
 
-    print(f"\nBest val NED {best_distance:.3f} at epoch {best_epoch}; saved to {CHECKPOINT_PATH.resolve().relative_to(ROOT)}")
-    model, vocab = load_checkpoint()
-    print("\nVal results for the saved model:")
-    print(summarize(evaluate(model, vocab, examples["val"])).to_string())
+    log(f"\nBest val NED {best_distance:.3f} at epoch {best_epoch}; saved to {checkpoint_path.resolve().relative_to(ROOT)}")
+    model, vocab = load_checkpoint(checkpoint_path)
+    results = evaluate(model, vocab, examples["val"])
+    log("\nVal results for the saved model:")
+    log(summarize(results).to_string())
+    return results, best_epoch
+
+
+def train_seeds(n_seeds):
+    """Train the same CONFIG with several seeds and report the mean and spread on val.
+
+    One run on 212 val examples can swing a few points by luck alone, so compare
+    settings by these averages rather than by single runs.
+    """
+    print(f"Config: {CONFIG}")
+    runs = []
+    for seed in range(SEED, SEED + n_seeds):
+        path = CHECKPOINT_PATH.with_name(f"seq2seq_seed{seed}.pt")
+        results, best_epoch = train(seed, path, verbose=False)
+        runs.append({
+            "seed": seed,
+            "best_epoch": best_epoch,
+            "accuracy": results["exact"].mean(),
+            "NED": results["normalized_distance"].mean(),
+            # Per-language accuracy shows whether one language is driving the difference
+            **results.groupby("target_language")["exact"].mean().add_prefix("acc_").to_dict(),
+        })
+        print(f"seed {seed}  epoch {best_epoch:>3}  val acc {runs[-1]['accuracy']:.3f}  val NED {runs[-1]['NED']:.3f}")
+
+    runs = pd.DataFrame(runs).set_index("seed")
+    print("\nPer seed:")
+    print(runs.round(3).to_string())
+    print("\nMean ± std over seeds:")
+    for column in runs.columns:
+        print(f"  {column:<16} {runs[column].mean():.3f} ± {runs[column].std():.3f}")
+    print(f"\nCheckpoints saved as {CHECKPOINT_PATH.with_name('seq2seq_seed*.pt').resolve().relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
-    train()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--seeds", type=int, default=1,
+                        help="train this many seeds and report mean ± std instead of one verbose run")
+    args = parser.parse_args()
+    if args.seeds > 1:
+        train_seeds(args.seeds)
+    else:
+        train()

@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+from collections import Counter
 from functools import lru_cache
 
 import pandas as pd
@@ -58,6 +59,11 @@ def home():
     return FileResponse(FOLDER / "index.html")
 
 
+@app.get("/about")
+def about():
+    return FileResponse(FOLDER / "about.html")
+
+
 @app.get("/style.css")
 def style():
     return FileResponse(FOLDER / "style.css")
@@ -71,16 +77,27 @@ def concepts(language: str):
 
     _, _, choices = get_resources()
 
-    # Include the set ID because multiple sets can share a gloss.
-    return [
-        {
+    # Multiple sets can share a gloss, so the sister words tell them apart.
+    concepts = []
+    for item in choices:
+        if item["target_language"] != target:
+            continue
+        sisters = ", ".join(
+            f"{lang.title()} {form}" for lang, form in item["sources"].items()
+        )
+        concepts.append({
             "id": str(item["cognateset_id"]),
             "gloss": item["gloss"],
-            "label": f'{item["gloss"]} [{item["cognateset_id"]}]',
-        }
-        for item in choices
-        if item["target_language"] == target
-    ]
+            "label": f'{item["gloss"]} ({sisters})',
+        })
+
+    # The page matches the chosen label exactly, so fall back to the set ID
+    # if two sets still end up with the same label.
+    counts = Counter(concept["label"] for concept in concepts)
+    for concept in concepts:
+        if counts[concept["label"]] > 1:
+            concept["label"] += f' [{concept["id"]}]'
+    return concepts
 
 
 @app.post("/predict")
