@@ -74,6 +74,13 @@ print("Forms with a cognate set:", len(forms))
 
 forms["Clean"] = forms["Form"].map(normalize)
 
+
+# Maori "wh" is one sound (close to f) written with two letters. The models read one
+# letter at a time, so "wh" was learned as w + h and mapped to "vf" in other languages.
+# Write it as "f", which also matches its Samoan and Tongan cognates (whetū = fetū).
+is_maori = forms["Language_ID"] == 330
+forms.loc[is_maori, "Clean"] = forms.loc[is_maori, "Clean"].str.replace("wh", "f", regex=False)
+
 # Drop bound affixes like "-a" or "faʔa-" and multi-word phrases
 is_affix = forms["Clean"].str.startswith("-") | forms["Clean"].str.endswith("-")
 is_phrase = forms["Clean"].str.contains(" ")
