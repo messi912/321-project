@@ -26,7 +26,7 @@ BATCH_SIZE = 32
 MAX_EPOCHS = 300
 # Stop once val normalized edit distance hasn't improved for this many epochs
 PATIENCE = 30
-SEED = 321
+SEED = int(os.environ.get("SEQ2SEQ_SEED", 321))
 
 
 def pad(sequences, pad_id):

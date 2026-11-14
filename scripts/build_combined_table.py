@@ -20,6 +20,23 @@ acd = pd.read_csv(ACD_PATH, index_col="cognateset_id")
 acd["split"] = [assign_split(set_id) for set_id in acd.index]
 abvd = pd.read_csv(ABVD_PATH, index_col="cognateset_id")
 
+def single_half(form):
+    """Return the half of an exactly doubled form ("oneone" -> "one"), or None."""
+    half = len(form) // 2
+    if len(form) >= 4 and len(form) % 2 == 0 and form[:half] == form[half:]:
+        return form[:half]
+    return None
+
+
+# Same rule as build_cognate_table.py, applied to ABVD: if a word is doubled and a
+# sister in the same set has the single half, keep the half (Samoan oneone -> one).
+for set_id, row in abvd.iterrows():
+    words = {lang: row[lang] for lang in LANGUAGES if isinstance(row[lang], str)}
+    for lang, word in words.items():
+        half = single_half(word)
+        if half is not None and half in words.values():
+            abvd.at[set_id, lang] = half
+
 # Every word that appears in an ACD val/test set, as (language, word)
 held_out = acd[acd["split"] != "train"]
 held_out_words = {(lang, word) for lang in LANGUAGES for word in held_out[lang].dropna()}
