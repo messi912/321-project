@@ -1,29 +1,40 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Polynesian Language Reconstruction</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
+    <nav class="nav">
+        <a href="/" aria-current="page">Predict</a>
+        <a href="/about">About</a>
+    </nav>
+
     <main class="container">
 
-        <h1>Polynesian Language Reconstruction</h1>
+        <header class="header">
+            <h1>Polynesian Language Reconstruction</h1>
 
-        <p class="description">
-            Predict missing words using related Polynesian languages.
-        </p>
+            <p class="description">
+                Predict missing words using related Polynesian languages.
+            </p>
+        </header>
 
         <!-- Step 1: Language -->
         <section>
-            <h2>Step 1: Select Target Language</h2>
+            <h2><span class="step">1</span>Select Target Language</h2>
 
             <select id="language">
                 <option value="Samoan">Samoan</option>
                 <option value="Tongan">Tongan</option>
-                <option value="Maori">Maori</option>
+                <option value="Maori">Māori</option>
                 <option value="Hawaiian">Hawaiian</option>
                 <option value="Rarotongan">Rarotongan</option>
             </select>
@@ -31,46 +42,28 @@
 
         <!-- Step 2: Search Concept -->
         <section>
-            <h2>Step 2: Select Concept</h2>
+            <h2><span class="step">2</span>Select Concept</h2>
 
             <input
                 type="search"
                 id="conceptSearch"
                 list="conceptList"
-                placeholder="Type to search concepts..."
+                placeholder="Loading concepts..."
                 autocomplete="off"
                 aria-label="Search for a concept"
+                disabled
             >
 
-            <datalist id="conceptList">
-                <!-- Example concepts.
-                     Replace with the full dataset list. -->
-                <option value="water"></option>
-                <option value="fire"></option>
-                <option value="hand"></option>
-                <option value="mother"></option>
-                <option value="father"></option>
-                <option value="fish"></option>
-                <option value="tree"></option>
-                <option value="stone"></option>
-                <option value="house"></option>
-                <option value="sun"></option>
-                <option value="moon"></option>
-                <option value="bird"></option>
-                <option value="sea"></option>
-                <option value="earth"></option>
-                <option value="eye"></option>
-                <option value="foot"></option>
-            </datalist>
+            <datalist id="conceptList"></datalist>
 
             <p id="conceptError" class="hint"></p>
         </section>
 
         <!-- Step 3: Predict -->
         <section>
-            <h2>Step 3: Generate Prediction</h2>
+            <h2><span class="step">3</span>Generate Prediction</h2>
 
-            <button id="predictButton" type="button">
+            <button id="predictButton" type="button" disabled>
                 Predict Word
             </button>
 
@@ -108,6 +101,11 @@
                 </div>
 
                 <div class="result-item">
+                    <span>Alternatives</span>
+                    <ol id="alternatives" class="alternatives"></ol>
+                </div>
+
+                <div class="result-item">
                     <span>Actual Word</span>
                     <strong id="actualWord"></strong>
                 </div>
@@ -121,19 +119,87 @@
                     <span>Normalized Edit Distance</span>
                     <strong id="editDistance"></strong>
                 </div>
+                <div class="result-item">
+                    <span>Why This Prediction?</span>
+                    <strong id="predictionExplanation"></strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Explanation Note</span>
+                    <small id="explanationDisclaimer"></small>
+                </div>
+
+                <div class="result-actions">
+                    <button id="showFlowButton" type="button" class="secondary-button">
+                        View flow chart
+                    </button>
+                </div>
 
             </div>
         </section>
 
     </main>
 
+    <!-- Flow chart pop-up: sister words -> model -> predicted word -->
+    <div id="flowModal" class="modal" hidden>
+        <div class="modal-backdrop" data-close></div>
+
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="flowTitle">
+            <header class="modal-header">
+                <div>
+                    <h2 id="flowTitle">How the word was predicted</h2>
+                    <p id="flowSubtitle" class="modal-subtitle"></p>
+                </div>
+                <button type="button" class="icon-button" data-close aria-label="Close">
+                    &times;
+                </button>
+            </header>
+
+            <div id="flow" class="flow">
+                <svg id="flowLines" class="flow-lines" aria-hidden="true"></svg>
+
+                <div class="flow-column">
+                    <p class="flow-label">Known sister words</p>
+                    <div id="flowSources" class="flow-sources"></div>
+                </div>
+
+                <div class="flow-column flow-middle">
+                    <div id="flowModel" class="flow-node flow-model">
+                        <span id="flowModelTitle" class="flow-model-title">Seq2Seq model</span>
+                        <span id="flowModelSub" class="flow-model-sub">encoder · attention · decoder</span>
+                    </div>
+                </div>
+
+                <div class="flow-column">
+                    <p class="flow-label">Output</p>
+                    <div id="flowPredicted" class="flow-node flow-predicted">
+                        <span id="flowPredictedLanguage" class="flow-lang"></span>
+                        <span id="flowPredictedWord" class="flow-word"></span>
+                        <span id="flowPredictedTag" class="flow-tag">Predicted</span>
+                    </div>
+                    <div id="flowAlternatives" class="flow-alternatives">
+                        <span class="flow-lang">Other candidates</span>
+                        <ol id="flowAlternativesList" class="alternatives"></ol>
+                    </div>
+                    <div id="flowActual" class="flow-node flow-actual">
+                        <span class="flow-lang">Actual word</span>
+                        <span id="flowActualWord" class="flow-word"></span>
+                        <span id="flowMatch" class="flow-match"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Get HTML elements
         const languageSelect =
             document.getElementById("language");
 
         const conceptSearch =
             document.getElementById("conceptSearch");
+
+        const conceptList =
+            document.getElementById("conceptList");
 
         const conceptError =
             document.getElementById("conceptError");
@@ -150,40 +216,39 @@
         const emptyResult =
             document.getElementById("emptyResult");
 
+        let availableConcepts = [];
         let isLoading = false;
+        let conceptRequestId = 0;
 
-        // Get available concepts from datalist
-        const availableConcepts = Array.from(
-            document.querySelectorAll("#conceptList option")
-        ).map(option => option.value);
-
-        // Check if the entered concept is valid
-        function getSelectedConcept() {
-            const typed = conceptSearch.value
-                .trim()
-                .toLowerCase();
-
-            return availableConcepts.find(
-                concept => concept.toLowerCase() === typed
-            ) || null;
-        }
-
-        // Reset results when selection changes
+        // Clear previous prediction results.
         function resetResults() {
             results.hidden = true;
             emptyResult.hidden = false;
             status.textContent = "";
         }
 
-        // Validate concept
+        // Find the selected cognate-set ID.
+        function getSelectedConcept() {
+            const typed = conceptSearch.value
+                .trim()
+                .toLowerCase();
+
+            const selected = availableConcepts.find(
+                item => item.label.toLowerCase() === typed
+            );
+
+            return selected ? selected.id : null;
+        }
+
+        // Validate the selected concept.
         function validateConcept() {
             const concept = getSelectedConcept();
 
             if (!concept) {
                 conceptError.textContent =
                     conceptSearch.value.trim()
-                    ? "Please select a concept from the suggestions."
-                    : "";
+                        ? "Please select a concept from the suggestions."
+                        : "";
 
                 predictButton.disabled = true;
                 return false;
@@ -194,20 +259,93 @@
             return true;
         }
 
+        // Load real concepts from FastAPI for the selected language.
+        async function loadConcepts() {
+            const requestId = ++conceptRequestId;
+            const language = languageSelect.value;
+
+            availableConcepts = [];
+            conceptList.replaceChildren();
+            conceptSearch.value = "";
+            conceptSearch.disabled = true;
+            conceptSearch.placeholder = "Loading concepts...";
+            predictButton.disabled = true;
+            conceptError.textContent = "";
+
+            resetResults();
+
+            try {
+                const response = await fetch(
+                    "/concepts?language=" +
+                    encodeURIComponent(language)
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Could not load concepts: " + response.status
+                    );
+                }
+
+                const concepts = await response.json();
+
+                // Ignore results from an older language selection.
+                if (requestId !== conceptRequestId) {
+                    return;
+                }
+
+                availableConcepts = concepts;
+
+                for (const concept of concepts) {
+                    const option = document.createElement("option");
+                    option.value = concept.label;
+                    conceptList.appendChild(option);
+                }
+
+                conceptSearch.disabled = false;
+                conceptSearch.placeholder =
+                    "Type to search concepts...";
+
+                if (concepts.length === 0) {
+                    conceptError.textContent =
+                        "No documented concepts available for this language.";
+                    conceptSearch.disabled = true;
+                }
+
+            } catch (error) {
+                if (requestId !== conceptRequestId) {
+                    return;
+                }
+
+                console.error(error);
+
+                conceptSearch.placeholder =
+                    "Concepts unavailable";
+
+                conceptError.textContent =
+                    "Could not load concepts from the backend.";
+            }
+        }
+
+        // Reset results when the user edits a selection.
         conceptSearch.addEventListener("input", () => {
             resetResults();
+
             if (!isLoading) {
                 validateConcept();
             }
         });
 
-        languageSelect.addEventListener("change", resetResults);
+        languageSelect.addEventListener("change", () => {
+            loadConcepts();
+        });
 
-        // Format returned data
+        // Format API response values for display.
         function displayValue(value, fallback = "Not available") {
-            if (value === null ||
+            if (
+                value === null ||
                 value === undefined ||
-                value === "") {
+                value === ""
+            ) {
                 return fallback;
             }
 
@@ -230,7 +368,7 @@
             return String(value);
         }
 
-        // Display prediction results
+        // Show the prediction and its comparison.
         function showResults(data) {
             document.getElementById("resultLanguage").textContent =
                 displayValue(data.language);
@@ -244,11 +382,19 @@
             document.getElementById("predictedWord").textContent =
                 displayValue(data.predicted_word);
 
+            renderAlternatives(
+                document.getElementById("alternatives"),
+                (data.alternatives || []).slice(1)
+            );
+
             document.getElementById("actualWord").textContent =
                 displayValue(data.actual_word);
 
-            document.getElementById("exactMatch").textContent =
+            const exactMatch = document.getElementById("exactMatch");
+            exactMatch.textContent =
                 displayValue(data.exact_match, "Not calculated");
+            // Colors the Yes/No pill green or red
+            exactMatch.dataset.match = String(data.exact_match);
 
             document.getElementById("editDistance").textContent =
                 displayValue(
@@ -256,11 +402,234 @@
                     "Not calculated"
                 );
 
+            document.getElementById("predictionExplanation").textContent =
+                data.explanation?.summary || "Explanation unavailable.";
+
+            document.getElementById("explanationDisclaimer").textContent =
+                data.explanation?.disclaimer || "";
+
             emptyResult.hidden = true;
             results.hidden = false;
+
+            lastResult = data;
+            openFlow(data);
         }
 
-        // Send request to FastAPI
+        // ----- Flow chart pop-up -----
+
+        const flowModal = document.getElementById("flowModal");
+        const flow = document.getElementById("flow");
+        const flowLines = document.getElementById("flowLines");
+        const flowSources = document.getElementById("flowSources");
+        const flowModel = document.getElementById("flowModel");
+        const flowPredicted = document.getElementById("flowPredicted");
+
+        const LANGUAGE_NAMES = { maori: "Māori" };
+        const SVG_NS = "http://www.w3.org/2000/svg";
+
+        let lastResult = null;
+
+        function languageName(code) {
+            const key = String(code).toLowerCase();
+            return LANGUAGE_NAMES[key] || key.charAt(0).toUpperCase() + key.slice(1);
+        }
+
+        function percent(confidence) {
+            return Math.round(confidence * 100) + "%";
+        }
+
+        // Ranked candidate words, each with a confidence bar.
+        // Confidence is the average per-letter probability, so the bars don't sum to 100%.
+        function renderAlternatives(list, alternatives) {
+            list.replaceChildren();
+
+            if (alternatives.length === 0) {
+                const empty = document.createElement("li");
+                empty.className = "alternative-empty";
+                empty.textContent = "No other candidates";
+                list.appendChild(empty);
+                return;
+            }
+
+            for (const alternative of alternatives) {
+                const item = document.createElement("li");
+                item.className = "alternative";
+                if (alternative.is_actual) {
+                    item.classList.add("is-actual");
+                }
+
+                const word = document.createElement("span");
+                word.className = "alternative-word";
+                word.textContent = alternative.word;
+
+                const bar = document.createElement("span");
+                bar.className = "alternative-bar";
+                const fill = document.createElement("span");
+                fill.style.width = percent(alternative.confidence);
+                bar.appendChild(fill);
+
+                const value = document.createElement("span");
+                value.className = "alternative-value";
+                value.textContent = percent(alternative.confidence);
+
+                item.append(word, bar, value);
+                if (alternative.is_actual) {
+                    const note = document.createElement("span");
+                    note.className = "alternative-note";
+                    note.textContent = "actual word";
+                    item.appendChild(note);
+                }
+                list.appendChild(item);
+            }
+        }
+
+        function openFlow(data) {
+            document.getElementById("flowSubtitle").textContent =
+                displayValue(data.concept);
+
+            flowSources.replaceChildren();
+            Object.entries(data.related_words || {}).forEach(([lang, word], i) => {
+                const node = document.createElement("div");
+                node.className = "flow-node flow-source";
+                node.style.setProperty("--i", i);
+
+                const name = document.createElement("span");
+                name.className = "flow-lang";
+                name.textContent = languageName(lang);
+
+                const form = document.createElement("span");
+                form.className = "flow-word";
+                form.textContent = word;
+
+                node.append(name, form);
+                flowSources.appendChild(node);
+            });
+
+            document.getElementById("flowPredictedLanguage").textContent =
+                languageName(data.language);
+            document.getElementById("flowPredictedWord").textContent =
+                displayValue(data.predicted_word);
+
+            const alternatives = data.alternatives || [];
+            document.getElementById("flowPredictedTag").textContent =
+                alternatives.length ? "Predicted · " + percent(alternatives[0].confidence) : "Predicted";
+            renderAlternatives(
+                document.getElementById("flowAlternativesList"),
+                alternatives.slice(1)
+            );
+
+            const ensembleSize = data.model_count || 1;
+            document.getElementById("flowModelTitle").textContent =
+                ensembleSize > 1 ? `Ensemble of ${ensembleSize} models` : "Seq2Seq model";
+            document.getElementById("flowModelSub").textContent =
+                ensembleSize > 1 ? "averaged · beam search" : "encoder · attention · decoder";
+
+            document.getElementById("flowActualWord").textContent =
+                displayValue(data.actual_word);
+
+            const match = document.getElementById("flowMatch");
+            match.textContent = data.exact_match ? "Exact match" : "Mismatch";
+            match.dataset.match = String(data.exact_match);
+
+            // Restart the entrance animations each time it opens
+            flow.classList.remove("is-playing");
+            flowModal.hidden = false;
+            document.body.classList.add("modal-open");
+            drawFlowLines();
+            void flow.offsetWidth;
+            flow.classList.add("is-playing");
+
+            flowModal.querySelector(".icon-button").focus();
+        }
+
+        function closeFlow() {
+            flowModal.hidden = true;
+            document.body.classList.remove("modal-open");
+            document.getElementById("showFlowButton").focus();
+        }
+
+        // Curved connector from one box edge to another
+        function connector(from, to, horizontal) {
+            const box = flow.getBoundingClientRect();
+            let x1, y1, x2, y2, d;
+
+            if (horizontal) {
+                x1 = from.right - box.left;
+                y1 = from.top + from.height / 2 - box.top;
+                x2 = to.left - box.left;
+                y2 = to.top + to.height / 2 - box.top;
+                const bend = (x2 - x1) / 2;
+                d = `M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`;
+            } else {
+                x1 = from.left + from.width / 2 - box.left;
+                y1 = from.bottom - box.top;
+                x2 = to.left + to.width / 2 - box.left;
+                y2 = to.top - box.top;
+                const bend = (y2 - y1) / 2;
+                d = `M ${x1} ${y1} C ${x1} ${y1 + bend}, ${x2} ${y2 - bend}, ${x2} ${y2}`;
+            }
+            return d;
+        }
+
+        function addPath(d, direction) {
+            const path = document.createElementNS(SVG_NS, "path");
+            path.setAttribute("d", d);
+            path.setAttribute("pathLength", "1");
+            path.setAttribute("class", `flow-path flow-path-${direction}`);
+            path.setAttribute("marker-end", `url(#flowArrow-${direction})`);
+            flowLines.appendChild(path);
+        }
+
+        function arrowMarker(direction) {
+            return `
+                <marker id="flowArrow-${direction}" viewBox="0 0 10 10" refX="8" refY="5"
+                        markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-arrow-${direction}"></path>
+                </marker>`;
+        }
+
+        function drawFlowLines() {
+            const box = flow.getBoundingClientRect();
+            flowLines.setAttribute("width", box.width);
+            flowLines.setAttribute("height", box.height);
+            flowLines.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+            flowLines.innerHTML =
+                `<defs>${arrowMarker("in")}${arrowMarker("out")}</defs>`;
+
+            const model = flowModel.getBoundingClientRect();
+            const sources = flowSources.getBoundingClientRect();
+            // Side by side on wide screens, stacked on phones
+            const horizontal = model.left >= sources.right - 1;
+
+            for (const source of flowSources.children) {
+                addPath(connector(source.getBoundingClientRect(), model, horizontal), "in");
+            }
+            addPath(connector(model, flowPredicted.getBoundingClientRect(), horizontal), "out");
+        }
+
+        document.getElementById("showFlowButton").addEventListener("click", () => {
+            if (lastResult) {
+                openFlow(lastResult);
+            }
+        });
+
+        flowModal.querySelectorAll("[data-close]").forEach(element =>
+            element.addEventListener("click", closeFlow)
+        );
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && !flowModal.hidden) {
+                closeFlow();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (!flowModal.hidden) {
+                drawFlowLines();
+            }
+        });
+
+        // Send a real prediction request to FastAPI.
         async function predictWord() {
             if (isLoading || !validateConcept()) {
                 return;
@@ -272,6 +641,8 @@
             isLoading = true;
             predictButton.disabled = true;
             predictButton.textContent = "Predicting...";
+            languageSelect.disabled = true;
+            conceptSearch.disabled = true;
 
             resetResults();
             status.textContent = "Generating prediction...";
@@ -289,31 +660,42 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error("Server error: " + response.status);
+                    let message = "Server error: " + response.status;
+
+                    try {
+                        const errorData = await response.json();
+                        message = errorData.detail || message;
+                    } catch (_) {
+                        // Keep the default error message.
+                    }
+
+                    throw new Error(message);
                 }
 
                 const data = await response.json();
 
                 showResults(data);
-                status.textContent = "Request completed.";
+                status.textContent = "Prediction completed.";
 
             } catch (error) {
                 console.error(error);
+
                 status.textContent =
-                    "Error connecting to backend. Please try again.";
+                    "Prediction failed: " + error.message;
 
             } finally {
                 isLoading = false;
                 predictButton.textContent = "Predict Word";
+                languageSelect.disabled = false;
+                conceptSearch.disabled = false;
                 validateConcept();
             }
         }
 
         predictButton.addEventListener("click", predictWord);
 
-        // Initial validation
-        validateConcept();
+        // Load dataset concepts when the page first opens.
+        loadConcepts();
     </script>
-
 </body>
 </html>

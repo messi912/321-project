@@ -1,11 +1,19 @@
+import os
 from pathlib import Path
 
 import pandas as pd
 
-from splits import assign_split
+try:
+    from .splits import assign_split
+except ImportError:
+    from splits import assign_split
+
 
 ROOT = Path(__file__).resolve().parents[1]
-TABLE_PATH = ROOT / "data" / "processed" / "cognate_table.csv"
+TABLE_PATH = Path(os.environ.get(
+    "COGNATE_TABLE",
+    str(ROOT / "data" / "processed" / "cognate_table.csv")
+))
 
 LANGUAGES = ["hawaiian", "maori", "rarotongan", "samoan", "tahitian", "tongan"]
 
@@ -28,7 +36,10 @@ def load_examples(table_path=TABLE_PATH):
         for target in present:
             sources = {lang: form for lang, form in present.items() if lang != target}
             if sources:
-                examples[assign_split(cognateset_id)].append({
+                split = row["split"] if "split" in table.columns else assign_split(cognateset_id)
+                if split not in examples:
+                    raise ValueError(f"Invalid split: {split}")
+                examples[split].append({
                     "cognateset_id": cognateset_id,
                     "target_language": target,
                     "target": present[target],
@@ -40,6 +51,31 @@ def load_examples(table_path=TABLE_PATH):
 def segment(form):
     """Split a form into the units the model reads. Currently one token per character."""
     return list(form)
+
+
+
+def segment_phonemes(form, language):
+    """Group selected orthographic digraphs into sound-aware tokens."""
+    digraphs = {
+        "maori": {"wh", "ng"},
+    }
+
+    units = digraphs.get(language.lower(), set())
+    tokens = []
+    i = 0
+
+    while i < len(form):
+        pair = form[i:i + 2]
+
+        if pair in units:
+            tokens.append(pair)
+            i += 2
+        else:
+            tokens.append(form[i])
+            i += 1
+
+    return tokens
+
 
 
 class Vocab:

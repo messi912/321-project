@@ -46,6 +46,14 @@ def parse_etymon(name):
     return pd.Series([proto_language, proto_form, gloss])
 
 
+def single_half(form):
+    """Return the half of an exactly doubled form ("piapia" -> "pia"), or None."""
+    half = len(form) // 2
+    if len(form) >= 4 and len(form) % 2 == 0 and form[:half] == form[half:]:
+        return form[:half]
+    return None
+
+
 # Load the CLDF tables
 forms = pd.read_csv(DATA_DIR / "forms.csv", low_memory=False)
 cognates = pd.read_csv(DATA_DIR / "cognates.csv", low_memory=False)
@@ -66,6 +74,22 @@ print("Forms with a cognate set:", len(forms))
 
 forms["Clean"] = forms["Form"].map(normalize)
 
+
+# Maori "wh" is one sound (close to f) written with two letters. The models read one
+# letter at a time, so "wh" was learned as w + h and mapped to "vf" in other languages.
+# Write it as "f", which also matches its Samoan and Tongan cognates (whetū = fetū).
+is_maori = forms["Language_ID"] == 330
+forms.loc[is_maori, "Clean"] = forms.loc[is_maori, "Clean"].str.replace("wh", "f", regex=False)
+
+
+# A few ACD entries use letters these languages don't have (Rarotongan "wai" for
+# vai "water", "lanu" for ranu). Rarotongan has v and r, Tongan has v.
+LETTER_FIXES = {388: {"w": "v", "l": "r"}, 434: {"w": "v"}}
+for language_id, fixes in LETTER_FIXES.items():
+    is_language = forms["Language_ID"] == language_id
+    for wrong, right in fixes.items():
+        forms.loc[is_language, "Clean"] = forms.loc[is_language, "Clean"].str.replace(wrong, right, regex=False)
+
 # Drop bound affixes like "-a" or "faʔa-" and multi-word phrases
 is_affix = forms["Clean"].str.startswith("-") | forms["Clean"].str.endswith("-")
 is_phrase = forms["Clean"].str.contains(" ")
@@ -80,6 +104,23 @@ forms = forms.sort_values(["Cognateset_ID", "Language_ID", "Boundaries", "Length
 best = forms.drop_duplicates(["Cognateset_ID", "Language_ID"], keep="first").copy()
 best["Clean"] = best["Clean"].str.replace("-", "", regex=False)
 print("Forms after picking one per language per set:", len(best))
+
+# Some sources list a doubled form (Hawaiian "piapia") where a sister in the same cognate
+# set lists the single form ("pia"). No model can predict that difference, so in that
+# case keep the single half. A doubled form with no single-form sister is left alone.
+forms_in_set = best.groupby("Cognateset_ID")["Clean"].agg(set)
+
+
+def collapse(row):
+    half = single_half(row["Clean"])
+    if half is not None and half in forms_in_set[row["Cognateset_ID"]]:
+        return half
+    return row["Clean"]
+
+
+collapsed = best.apply(collapse, axis=1)
+print("Reduplicated forms collapsed:", (collapsed != best["Clean"]).sum())
+best["Clean"] = collapsed
 
 # One row per cognate set, one column per language
 table = best.pivot(index="Cognateset_ID", columns="Language_ID", values="Clean")

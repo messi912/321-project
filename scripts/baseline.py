@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from metrics import edit_distance, score, summarize
 from splits import assign_split
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,20 +16,6 @@ LANGUAGES = ["hawaiian", "maori", "rarotongan", "samoan", "tahitian", "tongan"]
 #   copy   - copy the form from the most similar available language
 #   mapped - same, but first apply character correspondences learned from training data
 #            (e.g. Hawaiian k -> Maori t)
-
-
-def edit_distance(a, b):
-    previous = list(range(len(b) + 1))
-    for i, char_a in enumerate(a, 1):
-        current = [i]
-        for j, char_b in enumerate(b, 1):
-            current.append(min(
-                previous[j] + 1,
-                current[j - 1] + 1,
-                previous[j - 1] + (char_a != char_b),
-            ))
-        previous = current
-    return previous[-1]
 
 
 def align(source, target):
@@ -134,35 +121,15 @@ def evaluate(name, examples, ranking, transform):
     rows = []
     for example in examples:
         prediction, source_lang = predict(example, ranking, transform)
-        distance = edit_distance(prediction, example["target"])
         rows.append({
             "baseline": name,
             "target_language": example["target_language"],
             "source_language": source_lang,
             "target": example["target"],
             "prediction": prediction,
-            "exact": prediction == example["target"],
-            "distance": distance,
-            "normalized_distance": distance / len(example["target"]),
+            **score(example["target"], prediction),
         })
     return pd.DataFrame(rows)
-
-
-def summarize(results):
-    grouped = results.groupby("target_language").agg(
-        examples=("exact", "size"),
-        accuracy=("exact", "mean"),
-        edit_distance=("distance", "mean"),
-        normalized=("normalized_distance", "mean"),
-    )
-    grouped.loc["ALL"] = [
-        len(results),
-        results["exact"].mean(),
-        results["distance"].mean(),
-        results["normalized_distance"].mean(),
-    ]
-    grouped["examples"] = grouped["examples"].astype(int)
-    return grouped.round(3)
 
 
 table = pd.read_csv(TABLE_PATH, index_col="cognateset_id")
