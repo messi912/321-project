@@ -13,9 +13,10 @@ FOLDER = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from data import LANGUAGES, TABLE_PATH, load_examples
-from train import load_checkpoint, predict as model_predict
+from train import load_checkpoint
 from metrics import score
 from explain import explain_prediction
+from ensemble import load_models, predict_top
 
 app = FastAPI()
 
@@ -34,7 +35,14 @@ def get_resources():
 
     table = pd.read_csv(TABLE_PATH, index_col="cognateset_id")
     examples = load_examples()
-    model, vocab = load_checkpoint()
+
+    # Use every seq2seq_<seed>.pt as an ensemble; fall back to the
+    # single seq2seq.pt if no seed checkpoints have been trained.
+    try:
+        models, vocab = load_models()
+    except FileNotFoundError:
+        model, vocab = load_checkpoint()
+        models = [model]
 
     # Match each example to its documented gloss.
     choices = []
@@ -51,7 +59,7 @@ def get_resources():
                 "split": split_name,
             })
 
-    return model, vocab, choices
+    return models, vocab, choices
 
 
 @app.get("/")
@@ -106,7 +114,7 @@ def predict_word(data: WordRequest):
     if target not in LANGUAGES:
         raise HTTPException(400, "Unsupported language")
 
-    model, vocab, choices = get_resources()
+    models, vocab, choices = get_resources()
 
     # The frontend sends a cognate-set ID, not an arbitrary word.
     matches = [
@@ -123,9 +131,11 @@ def predict_word(data: WordRequest):
 
     example = matches[0]
 
-    # The model receives the target-language tag and sister
+    # The models receive the target-language tag and sister
     # forms, but NOT the actual target word.
-    prediction = model_predict(model, vocab, [example])[0]
+    # Beam search returns ranked (word, confidence) pairs; the top one is the prediction.
+    top = predict_top(models, vocab, example)
+    prediction = top[0][0]
     actual = example["target"]
     metrics = score(actual, prediction)
 
@@ -142,6 +152,13 @@ def predict_word(data: WordRequest):
             cognateset_id=example["cognateset_id"]
         ),
         "predicted_word": prediction,
+        # Confidence is the average per-letter probability, so the
+        # alternatives' scores do not add up to 1.
+        "alternatives": [
+            {"word": word, "confidence": confidence, "is_actual": word == actual}
+            for word, confidence in top
+        ],
+        "model_count": len(models),
         "actual_word": actual,
         "exact_match": metrics["exact"],
         "normalized_edit_distance": round(

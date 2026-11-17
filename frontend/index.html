@@ -101,6 +101,11 @@
                 </div>
 
                 <div class="result-item">
+                    <span>Alternatives</span>
+                    <ol id="alternatives" class="alternatives"></ol>
+                </div>
+
+                <div class="result-item">
                     <span>Actual Word</span>
                     <strong id="actualWord"></strong>
                 </div>
@@ -160,8 +165,8 @@
 
                 <div class="flow-column flow-middle">
                     <div id="flowModel" class="flow-node flow-model">
-                        <span class="flow-model-title">Seq2Seq model</span>
-                        <span class="flow-model-sub">encoder · attention · decoder</span>
+                        <span id="flowModelTitle" class="flow-model-title">Seq2Seq model</span>
+                        <span id="flowModelSub" class="flow-model-sub">encoder · attention · decoder</span>
                     </div>
                 </div>
 
@@ -170,7 +175,11 @@
                     <div id="flowPredicted" class="flow-node flow-predicted">
                         <span id="flowPredictedLanguage" class="flow-lang"></span>
                         <span id="flowPredictedWord" class="flow-word"></span>
-                        <span class="flow-tag">Predicted</span>
+                        <span id="flowPredictedTag" class="flow-tag">Predicted</span>
+                    </div>
+                    <div id="flowAlternatives" class="flow-alternatives">
+                        <span class="flow-lang">Other candidates</span>
+                        <ol id="flowAlternativesList" class="alternatives"></ol>
                     </div>
                     <div id="flowActual" class="flow-node flow-actual">
                         <span class="flow-lang">Actual word</span>
@@ -373,6 +382,11 @@
             document.getElementById("predictedWord").textContent =
                 displayValue(data.predicted_word);
 
+            renderAlternatives(
+                document.getElementById("alternatives"),
+                (data.alternatives || []).slice(1)
+            );
+
             document.getElementById("actualWord").textContent =
                 displayValue(data.actual_word);
 
@@ -420,6 +434,55 @@
             return LANGUAGE_NAMES[key] || key.charAt(0).toUpperCase() + key.slice(1);
         }
 
+        function percent(confidence) {
+            return Math.round(confidence * 100) + "%";
+        }
+
+        // Ranked candidate words, each with a confidence bar.
+        // Confidence is the average per-letter probability, so the bars don't sum to 100%.
+        function renderAlternatives(list, alternatives) {
+            list.replaceChildren();
+
+            if (alternatives.length === 0) {
+                const empty = document.createElement("li");
+                empty.className = "alternative-empty";
+                empty.textContent = "No other candidates";
+                list.appendChild(empty);
+                return;
+            }
+
+            for (const alternative of alternatives) {
+                const item = document.createElement("li");
+                item.className = "alternative";
+                if (alternative.is_actual) {
+                    item.classList.add("is-actual");
+                }
+
+                const word = document.createElement("span");
+                word.className = "alternative-word";
+                word.textContent = alternative.word;
+
+                const bar = document.createElement("span");
+                bar.className = "alternative-bar";
+                const fill = document.createElement("span");
+                fill.style.width = percent(alternative.confidence);
+                bar.appendChild(fill);
+
+                const value = document.createElement("span");
+                value.className = "alternative-value";
+                value.textContent = percent(alternative.confidence);
+
+                item.append(word, bar, value);
+                if (alternative.is_actual) {
+                    const note = document.createElement("span");
+                    note.className = "alternative-note";
+                    note.textContent = "actual word";
+                    item.appendChild(note);
+                }
+                list.appendChild(item);
+            }
+        }
+
         function openFlow(data) {
             document.getElementById("flowSubtitle").textContent =
                 displayValue(data.concept);
@@ -446,6 +509,21 @@
                 languageName(data.language);
             document.getElementById("flowPredictedWord").textContent =
                 displayValue(data.predicted_word);
+
+            const alternatives = data.alternatives || [];
+            document.getElementById("flowPredictedTag").textContent =
+                alternatives.length ? "Predicted · " + percent(alternatives[0].confidence) : "Predicted";
+            renderAlternatives(
+                document.getElementById("flowAlternativesList"),
+                alternatives.slice(1)
+            );
+
+            const ensembleSize = data.model_count || 1;
+            document.getElementById("flowModelTitle").textContent =
+                ensembleSize > 1 ? `Ensemble of ${ensembleSize} models` : "Seq2Seq model";
+            document.getElementById("flowModelSub").textContent =
+                ensembleSize > 1 ? "averaged · beam search" : "encoder · attention · decoder";
+
             document.getElementById("flowActualWord").textContent =
                 displayValue(data.actual_word);
 

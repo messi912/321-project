@@ -288,6 +288,86 @@ button:disabled {
     color: var(--danger);
 }
 
+/* Ranked alternative words with confidence bars */
+.alternatives {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.result-item .alternatives {
+    max-width: 65%;
+    min-width: 220px;
+}
+
+.alternative {
+    display: grid;
+    grid-template-columns: minmax(60px, 1fr) 80px 38px;
+    align-items: center;
+    gap: 10px;
+}
+
+.alternative-word {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+.alternative-bar {
+    height: 4px;
+    background-color: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.alternative-bar span {
+    display: block;
+    height: 100%;
+    background-color: var(--accent);
+    opacity: 0.7;
+}
+
+.alternative-value {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+.alternative-note {
+    grid-column: 1 / -1;
+    margin-top: -4px;
+    font-size: 12px;
+    color: var(--success);
+}
+
+.alternative.is-actual .alternative-word {
+    color: var(--success);
+}
+
+.alternative.is-actual .alternative-bar span {
+    background-color: var(--success);
+}
+
+.alternative-empty {
+    font-size: 13px;
+    color: var(--text-faint);
+    font-style: italic;
+}
+
+.flow-alternatives {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px 2px 6px;
+}
+
 /* Button under the results table */
 .result-actions {
     padding-top: 16px;
@@ -547,9 +627,14 @@ body.modal-open {
     animation-delay: 1.3s;
 }
 
-.flow.is-playing .flow-actual {
+.flow.is-playing .flow-alternatives {
     animation: fade-in 0.3s ease-out both;
     animation-delay: 1.5s;
+}
+
+.flow.is-playing .flow-actual {
+    animation: fade-in 0.3s ease-out both;
+    animation-delay: 1.7s;
 }
 
 @keyframes fade-in {
@@ -650,8 +735,10 @@ body.modal-open {
         gap: 4px;
     }
 
-    .result-item strong {
+    .result-item strong,
+    .result-item .alternatives {
         max-width: 100%;
+        min-width: 0;
         text-align: left;
     }
 
