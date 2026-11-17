@@ -434,8 +434,13 @@
             return LANGUAGE_NAMES[key] || key.charAt(0).toUpperCase() + key.slice(1);
         }
 
+        // Bar width needs a CSS percentage; the visible score is a 0–1 decimal
         function percent(confidence) {
             return Math.round(confidence * 100) + "%";
+        }
+
+        function formatConfidence(confidence) {
+            return confidence.toFixed(2);
         }
 
         // Ranked candidate words, each with a confidence bar.
@@ -470,7 +475,7 @@
 
                 const value = document.createElement("span");
                 value.className = "alternative-value";
-                value.textContent = percent(alternative.confidence);
+                value.textContent = formatConfidence(alternative.confidence);
 
                 item.append(word, bar, value);
                 if (alternative.is_actual) {
@@ -512,7 +517,7 @@
 
             const alternatives = data.alternatives || [];
             document.getElementById("flowPredictedTag").textContent =
-                alternatives.length ? "Predicted · " + percent(alternatives[0].confidence) : "Predicted";
+                alternatives.length ? "Predicted · " + formatConfidence(alternatives[0].confidence) : "Predicted";
             renderAlternatives(
                 document.getElementById("flowAlternativesList"),
                 alternatives.slice(1)
