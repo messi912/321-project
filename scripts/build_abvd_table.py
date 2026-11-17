@@ -40,6 +40,24 @@ def normalize(value):
     value = re.sub(r"[!?()]", "", value)
     return value.strip()
 
+
+
+# ABVD's Maori, Rarotongan and Tahitian sources write a long vowel as a doubled
+# letter ("taane"), while ACD and ABVD's other languages use a macron ("tāne").
+# Rewrite them to macrons so one sound has one spelling across both datasets.
+# Samoan and Tongan are left alone: there a double vowel is two syllables
+# ("itiiti" = iti + iti), not a long vowel.
+DOUBLED_LONG_VOWEL_LANGUAGES = {"maori", "rarotongan", "tahitian"}
+LONG_VOWELS = {"aa": "ā", "ee": "ē", "ii": "ī", "oo": "ō", "uu": "ū"}
+
+
+def long_vowels_to_macrons(form, language):
+    if language not in DOUBLED_LONG_VOWEL_LANGUAGES:
+        return form
+    for doubled, macron in LONG_VOWELS.items():
+        form = form.replace(doubled, macron)
+    return form
+
 forms = pd.read_csv(SOURCE / "forms.csv", low_memory=False)
 cognates = pd.read_csv(SOURCE / "cognates.csv", low_memory=False)
 parameters = pd.read_csv(SOURCE / "parameters.csv", low_memory=False)
@@ -51,6 +69,25 @@ forms = forms[
 forms["language"] = forms["Language_ID"].map(LANGUAGE_IDS)
 forms["clean"] = forms["Form"].map(normalize)
 
+
+# ABVD's Rarotongan source marks a glottal stop with a grave accent on the vowel
+# after it ("àre" = ʔare "house", "aì" = aʔi "fire"); ACD writes it as ʔ.
+# This must run before the long-vowel step so "àa" becomes ʔaa and then ʔā.
+GRAVE_TO_GLOTTAL = {"à": "ʔa", "è": "ʔe", "ì": "ʔi", "ò": "ʔo", "ù": "ʔu"}
+is_rarotongan = forms["language"] == "rarotongan"
+for grave, glottal in GRAVE_TO_GLOTTAL.items():
+    forms.loc[is_rarotongan, "clean"] = forms.loc[is_rarotongan, "clean"].str.replace(grave, glottal, regex=False)
+
+forms["clean"] = [
+    long_vowels_to_macrons(form, language)
+    for form, language in zip(forms["clean"], forms["language"])
+]
+
+# Maori "wh" is one sound written with two letters; write it as "f" to match
+# build_cognate_table.py so both datasets spell it the same way.
+is_maori = forms["language"] == "maori"
+forms.loc[is_maori, "clean"] = forms.loc[is_maori, "clean"].str.replace("wh", "f", regex=False)
+
 # Keep single lexical forms; don't silently concatenate phrases.
 forms = forms[
     forms["clean"].ne("")
@@ -58,6 +95,23 @@ forms = forms[
     & ~forms["clean"].str.startswith("-")
     & ~forms["clean"].str.endswith("-")
 ].copy()
+
+
+# Match ACD's spelling of the remaining sounds:
+# - "ng" is one sound in every Polynesian language (there is no separate g); ACD writes ŋ.
+# - "|" and "-" mark morpheme boundaries inside a word (lo|ko, huru-manu). ACD's
+#   builder removes these marks, so do the same here.
+# - One Rarotongan form writes the glottal stop as "q" (putaangiqu).
+forms["clean"] = (
+    forms["clean"]
+    .str.replace("ng", "ŋ", regex=False)
+    .str.replace("|", "", regex=False)
+    .str.replace("-", "", regex=False)
+    .str.replace("q", "ʔ", regex=False)
+)
+# Standard Samoan spelling writes ŋ as "g" (gafulu = ŋafulu "ten").
+is_samoan = forms["language"] == "samoan"
+forms.loc[is_samoan, "clean"] = forms.loc[is_samoan, "clean"].str.replace("g", "ŋ", regex=False)
 
 joined = forms.merge(
     cognates.loc[
